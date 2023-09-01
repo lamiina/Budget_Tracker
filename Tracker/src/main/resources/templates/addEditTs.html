@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add/Edit Transaction</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<nav class="navbar navbar-default">
+
+    <div class="container-fluid">
+
+        <div class="navbar-header">
+            <a class="navbar-brand">Budget Tracker</a>
+        </div>
+        <ul class="nav-ul">
+            <li class="nav-link"><a href="/">Home</a></li>
+            <li class="nav-link"><a href="/addT">Add Transactions</a></li>
+            <li class="nav-link"><a href="/reports">Reports</a></li>
+        </ul>
+
+    </div>
+
+</nav>
+
+
+<div class="container">
+    <h1>Add/Edit Transaction</h1>
+    <form action="#" th:action="@{/transactions}" method="post">
+        <div class="form-group">
+            <label for="date">Date:</label>
+            <input type="date" class="form-control" id="date" name="date" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <input type="text" class="form-control" id="description" name="description" required>
+        </div>
+        <div class="form-group">
+            <label for="category">Category:</label>
+            <select class="form-control" id="category" name="category" required>
+                <option value="">Choose a category</option>
+                <option th:each="category : ${categories}"
+                        th:value="${category.id}"
+                        th:text="${category.description}">
+                </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="amount">Amount:</label>
+            <input class="form-control" type="number" id="amount" name="amount" step="0.01" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+
+    </form>
+
+</div>
+</body>
+</html>

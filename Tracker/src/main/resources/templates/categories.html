@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Budget Tracker - Categories</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Budget Tracker</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a href="/">Home</a></li>
+            <li class="active"><a href="/categories">Categories</a></li>
+            <li><a href="/reports">Reports</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <h1>Categories</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Description</th>
+                <th>Type</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{this.id}}</td>
+            <td>{{this.description}}</td>
+            <td>{{this.type}}</td>
+            <td><a href="/categories/edit/{{this.id}}">Edit</a></td>
+            <td><form method="post" action="/categories/delete/{{this.id}}"><button type="submit">Delete</button></form></td>
+        </tr>
+        </tbody>
+    </table>
+<div class="row mt-3">
+    <div class="col-sm-12">
+        <a class="btn btn-primary" href="/addC">Add/Edit Category</a>
+    </div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <title>BudgetTracker -Categories Edit</title>
+</head>
+<body>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Budget Tracker</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="categories.html">Categories</a></li>
+            <li><a href="reports.html">Reports</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+<h1>Categories Edit</h1>
+<form method="post" th:action="@{/transactions/edit}">
+    <input type="hidden" id="id" name="id" th:value="${transaction.id}" />
+    <label for="date">Date:</label>
+    <input type="date" id="date" name="date" th:value="${transaction.date}" required><br><br>
+    <label for="description">Description:</label>
+    <input type="text" id="description" name="description" th:value="${transaction.description}" required><br><br>
+    <label for="category">Category:</label>
+    <select id="category" name="category" required>
+        <option value="">Choose a category</option>
+        <option th:each="category : ${categories}"
+                th:value="${category.id}"
+                th:selected="${transaction.category.id == category.id}"
+                th:text="${category.description}" />
+    </select><br><br>
+    <label for="amount">Amount:</label>
+    <input type="number" id="amount" name="amount" step="0.01" th:value="${transaction.amount}" required><br><br>
+    <label for="details">Details:</label>
+    <textarea id="details" name="details" th:text="${transaction.details}"></textarea><br><br>
+    <button type="submit"><a th:href="@{/transactions/edit(id=${transaction.id})}">Edit</a>Submit</button>
+</form>
+</div>
+</body>
+</html>

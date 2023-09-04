@@ -1,4 +1,4 @@
-package com.App.Tracker.Models;
+package com.App.Tracker.Entities;
 
 public enum CatType {
     INCOME("income"),
@@ -12,6 +12,18 @@ public enum CatType {
     }
     public String getValue(){
         return value;
+    }
+
+    public static CatType[] getAllValues() {
+        return CatType.values();
+    }
+    public static boolean typeExists(String typeToCheck) {
+        for (CatType type : CatType.values()) {
+            if (type.getValue().equalsIgnoreCase(typeToCheck)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static CatType fromValue(String value){

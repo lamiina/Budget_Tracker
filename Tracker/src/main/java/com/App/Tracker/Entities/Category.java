@@ -1,8 +1,7 @@
-package com.App.Tracker.Models;
+package com.App.Tracker.Entities;
 
 import jakarta.persistence.*;
 import org.antlr.v4.runtime.misc.NotNull;
-import org.springframework.lang.NonNull;
 
 import java.util.Set;
 

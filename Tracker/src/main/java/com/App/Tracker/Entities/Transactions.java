@@ -1,4 +1,4 @@
-package com.App.Tracker.Models;
+package com.App.Tracker.Entities;
 
 
 import jakarta.persistence.*;

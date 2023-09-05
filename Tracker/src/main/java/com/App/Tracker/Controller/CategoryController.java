@@ -1,8 +1,9 @@
 package com.App.Tracker.Controller;
 
 import com.App.Tracker.Entities.Category;
-import com.App.Tracker.Entities.Transactions;
+
 import com.App.Tracker.Services.CategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +14,12 @@ import java.util.List;
 public class CategoryController {
 
 
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
+
+    @Autowired
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @GetMapping
     public ResponseEntity<List<Category>> getCategories() {

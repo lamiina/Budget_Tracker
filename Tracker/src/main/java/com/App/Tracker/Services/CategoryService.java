@@ -45,9 +45,9 @@ public class CategoryService {
 
         if (cat.isPresent()) {
             throw new ConflictException("A category with the " + category.getDescription()
-                    + "description and " + category.getType() + " type already exists");
+                    + "description and " + category.getType().getValue() + " type already exists");
         }
-        String typeCheck = category.getType().toString();
+        String typeCheck = category.getType().getValue();
         if (!CatType.typeExists(typeCheck)) {
             throw new NotFoundException("Category type " + typeCheck + "does not exist");
         }
@@ -72,8 +72,8 @@ public class CategoryService {
         }
 
         // Update related Transactions if needed
-        if (category.getTransaction() != null) {
-            for (Transactions transaction : category.getTransaction()) {
+        if (category.getTransactions() != null) {
+            for (Transactions transaction : category.getTransactions()) {
                 transaction.setCategory(updateCategory);
                 transactionsRepo.save(transaction);
             }
@@ -93,7 +93,7 @@ public class CategoryService {
         Category category = optionalCategory.get();
 
         // Delete related transactions first
-        Set<Transactions> transactions = category.getTransaction();
+        Set<Transactions> transactions = category.getTransactions();
         if (transactions != null) {
             transactionsRepo.deleteAll(transactions);
 

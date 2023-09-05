@@ -1,11 +1,13 @@
 package com.App.Tracker.Controller;
 
 import com.App.Tracker.Entities.Transactions;
+import com.App.Tracker.Entities.TransactionsDTO;
 import com.App.Tracker.Repo.CategoryRepo;
 import com.App.Tracker.Repo.TransactionsRepo;
 import com.App.Tracker.Services.TransactionsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,26 +16,25 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/transactions")
 public class TransactionsController {
-
     private final TransactionsService transactionsService;
-
+    @Autowired
     public TransactionsController(TransactionsService transactionsService) {
         this.transactionsService = transactionsService;
     }
 
-    @Autowired
-
-
-    @GetMapping(value = "/")
-    public String getPage() {
-        return "This is the start of a new page";
-    }
-
     @GetMapping
-    public ResponseEntity<List<Transactions> >getTransactions() {
+    public ResponseEntity<List<TransactionsDTO> >getTransactions() {
         return this.transactionsService.getAllTransactions();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<TransactionsDTO> getTransactionById(@PathVariable long id) {
+        return this.transactionsService.getTransactionById(id);
+    }
+    @Transactional(readOnly = true)
+    public ResponseEntity<TransactionsDTO> getTransaction(@PathVariable long id) {
+        return this.transactionsService.getTransactionsDTOById(id);
+    }
     @PostMapping
     public ResponseEntity<Transactions> addTrans(@RequestBody Transactions transaction) {
 

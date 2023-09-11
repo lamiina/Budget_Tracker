@@ -1,8 +1,8 @@
-package com.App.Tracker.Settings;
-import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
-import org.springframework.context.annotation.Configuration;
+// package com.App.Tracker.Settings;
+// import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
+// import org.springframework.context.annotation.Configuration;
 
-@Configuration
-@EnableEncryptableProperties
-public class JasyptConfig {
-}
+// @Configuration
+// @EnableEncryptableProperties
+// public class JasyptConfig {
+// }

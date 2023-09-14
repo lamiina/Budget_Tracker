@@ -1,9 +1,13 @@
+@use "./reusable" as *;
+
 
  /* Reset default styles */
  *{
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    // REMEMBER TO CHANGE FONT SIZE TO DEFAULT 16px SIZE ON THE NEXT VIEWPORT
+    font-size: 11px;
 }
 
 /* Set page font and background */
@@ -18,6 +22,7 @@ body {
     background-color:#f5f5f5
 }
 
+// Navigation
 header{
 
     ul {
@@ -41,36 +46,105 @@ header{
 }
 
 .container{
-    margin: 1rem;
     max-width: 1100px;
     margin: 0 auto;
     padding: 1rem;
 
+
+    // Title
     h1 {
         text-align: center;
-        padding: 10px;
+        padding: 0.75rem 0;
         background-color: #edbf6b;
         color: #fff;
-        margin-bottom: 30px;
+        margin-bottom: 2rem;
+        font-size: initial;
     }
 
-    // next step is to style the filters
 
+    // Filter inputs
     .filters {
         display: flex;
         flex-direction:column ;
-        // justify-content: center;
-        // align-items: center;
+        gap: 0.3rem;
 
-        .filter-container{
+        .filter_container{
             select{
                 width: 100%;
+                padding: 0.5rem;
+                border-radius: $input_border_radius;
+                border:  1px solid $border_color;
             }
         }
 
-        .input-group {
+        .input_group {
             display: flex;
+            border:  1px solid $border_color;
+
+            border-radius: $input_border_radius;
+
+            input{
+                border: none;
+                width: 100%;
+                padding: 0.5rem ;
+                border-radius: $input_border_radius;
+
+    
+            }
+
+            .input_group_text{
+                display: flex;
+                align-items: center;
+                padding: 0 0.75rem;
+                background-color: rgb(228, 224, 224);
+               
+            }
         }
+    }
+
+
+    // Transactions
+    .transactions{
+        margin-top: 1rem;
+        border:  1px solid $border_color;
+
+          span{
+                width: 100%;
+                padding: 0.5rem;
+                &:not(:last-of-type){
+                    border-right: 1px solid $border_color;
+                }
+            }
+
+        .transaction_info{
+            display: flex;
+            font-weight: 800;
+        }
+
+        .transactions_container{
+            li{
+                display: flex;
+
+                span{
+                    border-top: 1px solid $border_color;
+
+                }
+
+                 &:nth-of-type(odd){
+                    background-color: #e9e9e9;
+                }
+            }
+        }
+    }
+
+    // THIS BUTTON NEEDS TO BE AT THE TOP OF THE LIST
+    button{
+        color: white;
+        border: none;
+        border-radius: $input_border_radius;
+        background: rgb(55, 142, 248);
+        margin-top: 1rem;
+        padding: 0.75rem 0.5rem;
     }
 
 }

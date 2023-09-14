@@ -3,6 +3,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-size: 11px;
 }
 
 /* Set page font and background */
@@ -32,25 +33,75 @@ header ul li a {
 }
 
 .container {
-  margin: 1rem;
   max-width: 1100px;
   margin: 0 auto;
   padding: 1rem;
 }
 .container h1 {
   text-align: center;
-  padding: 10px;
+  padding: 0.75rem 0;
   background-color: #edbf6b;
   color: #fff;
-  margin-bottom: 30px;
+  margin-bottom: 2rem;
+  font-size: initial;
 }
 .container .filters {
   display: flex;
   flex-direction: column;
+  gap: 0.3rem;
 }
-.container .filters .filter-container select {
+.container .filters .filter_container select {
   width: 100%;
+  padding: 0.5rem;
+  border-radius: 3px;
+  border: 1px solid #dddcdc;
 }
-.container .filters .input-group {
+.container .filters .input_group {
   display: flex;
+  border: 1px solid #dddcdc;
+  border-radius: 3px;
+}
+.container .filters .input_group input {
+  border: none;
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 3px;
+}
+.container .filters .input_group .input_group_text {
+  display: flex;
+  align-items: center;
+  padding: 0 0.75rem;
+  background-color: rgb(228, 224, 224);
+}
+.container .transactions {
+  margin-top: 1rem;
+  border: 1px solid #dddcdc;
+}
+.container .transactions span {
+  width: 100%;
+  padding: 0.5rem;
+}
+.container .transactions span:not(:last-of-type) {
+  border-right: 1px solid #dddcdc;
+}
+.container .transactions .transaction_info {
+  display: flex;
+  font-weight: 800;
+}
+.container .transactions .transactions_container li {
+  display: flex;
+}
+.container .transactions .transactions_container li span {
+  border-top: 1px solid #dddcdc;
+}
+.container .transactions .transactions_container li:nth-of-type(odd) {
+  background-color: #e9e9e9;
+}
+.container button {
+  color: white;
+  border: none;
+  border-radius: 3px;
+  background: rgb(55, 142, 248);
+  margin-top: 1rem;
+  padding: 0.75rem 0.5rem;
 }/*# sourceMappingURL=styles.css.map */

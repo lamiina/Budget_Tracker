@@ -8,7 +8,7 @@
         <title>Budget Tracker</title>
 
 
-        <script src="script.js"></script>
+       
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 
@@ -18,15 +18,48 @@
 
     <body>
 
+        <div class="popup overlay">
+            <div class="add_transaction ">
+                <h2>Add transaction</h2>
+
+                 <form >
+
+                    <div class="add_filter">
+                        <label for="select_category">Category:</label>
+                        <select class="form_control" id="select_category">
+                            <option value="">All</option>
+                        </select>
+                    </div>
+
+                    <div class="add_filter">
+                        <label for="start_date_filter">Date:</label>
+                        <input type="date" class="form_control" id="start_date_filter">   
+                    </div>
+
+                    <div class="add_filter">
+                        <label for="ammount">Amount:</label>
+                        <input type="number" class="form_control" id="ammount">   
+                    </div>
+
+                    <div class="add_filter">
+                        <label for="description">Description:</label>
+                        <input type="text" class="form_control" id="description">   
+                    </div>
+
+                    <button type="submit">Add</button>
+                </form>
+            </div>
+        </div>
+
 
         <header>
 
             <nav class="container">
 
-                <ul class="nav-ul">
-                    <li class="nav-link"><a href="/">Home</a></li>
-                    <li class="nav-link"><a href="/addT">Add Transactions</a></li>
-                    <li class="nav-link"><a href="/reports">Reports</a></li>
+                <ul class="nav_ul">
+                    <li class="nav_link"><a href="/">Home</a></li>
+                    <li class="nav_link"><a href="/addT">Add Transactions</a></li>
+                    <li class="nav_link"><a href="/reports">Reports</a></li>
                 </ul>
 
             </nav>
@@ -36,69 +69,90 @@
         <section>
             <div class="container">
     
+                
                 <h1>Budget Tracker - Transactions</h1>
+
+                <button>
+                    Add Transaction
+                </button>
     
                 <div class="filters">
 
-                    <div class="filter-container">
+                    <div class="filter_container">
                         <label for="type_filter">Type:</label>
-                        <select class="form-control" id="type_filter">
+                        <select class="form_control" id="type_filter">
                             <option value="">All</option>
                             <option value="income">Income</option>
                             <option value="expense">Expense</option>
                         </select>
                     </div>
 
-                    <div class="filter-container">
+                    <div class="filter_container">
                         <label for="category_filter">Category:</label>
-                        <select class="form-control" id="category_filter">
+                        <select class="form_control" id="category_filter">
                             <option value="">All</option>
-                            <option data-th-each="category : ${categories}" data-th-text="${category.description}"></option>
-    
                         </select>
                     </div>
 
-                    <div class="filter-container">
-                        <div class="input-group">
-                            <label for="start_date_filter">Date Range:</label>
-                            <input type="date" class="form-control" id="start_date_filter">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">to</span>
-                            </div>
-                            <input type="date" class="form-control" id="end_date_filter">
+                    <div class="filter_container">
+                        <label for="start_date_filter">Date Range:</label>
+                        <div class="input_group">
+                            <input type="date" class="form_control" id="start_date_filter">
+                            
+                                <span class="input_group_text">to</span> 
+                            
+                            <input type="date" class="form_control" id="end_date_filter">
                         </div>
                     </div>
 
                 </div>
     
-                <div class="">
-                    <div class="info">
+                <div class="transactions">
+                    <div class="transaction_info">
                         <span>Date</span>
                         <span>Description</span>
                         <span>Category</span>
                         <span>Amount</span>
                     </div>
     
-                    <div class="transactions-container">
-                        <div class="transaction">
+                    <ul class="transactions_container">
+                        <li >
                             <span>2023-03-21</span>
                             <span>monthly salary</span>
                             <span>salary</span>
                             <span>5000.0</span>
-                        </div>
-                    </div>
+                        </li>
+
+                        <li >
+                            <span>2023-03-21</span>
+                            <span>monthly salary</span>
+                            <span>salary</span>
+                            <span>5000.0</span>
+                        </li>
+
+                        <li >
+                            <span>2023-03-21</span>
+                            <span>monthly salary</span>
+                            <span>salary</span>
+                            <span>5000.0</span>
+                        </li>
+
+                        <li >
+                            <span>2023-03-21</span>
+                            <span>monthly salary</span>
+                            <span>salary</span>
+                            <span>5000.0</span>
+                        </li>
+                    </ul>
                 </div>
     
-                <div class="">
-                    <div class="">
-                        <a class="" href="/addT">Add Transaction</a>
-                    </div>
-                </div>
+              
+                 
     
             </div>
         </section>
-
     </body>
+     <script src="script.js"></script>
 </html>
 
 

@@ -1,9 +1,12 @@
+@use "./reusable" as *;
+
 
  /* Reset default styles */
  *{
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    font-size: 11px;
 }
 
 /* Set page font and background */
@@ -15,8 +18,66 @@ body {
     line-height:1.5;
     color:#000000;
     text-align:left;
-    background-color:#f5f5f5
+    background-color:#f5f5f5;
+
+
+    .hide{
+        display: none;
+    }
+
+    .show{
+        display: initial;
+    }
+
+    .overlay{
+        position: absolute;
+        background: rgba(0, 0, 0, 0.5);
+        width: 100vw;
+        height: 100vh;
+        z-index: 6;
+    }
+
+    .popup{
+        
+        .add_transaction{
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            padding: 1.5rem;
+            min-width: 200px;
+            
+            background-color: #e9e9e9;
+            border-radius: 10px;
+
+            h2{
+                font-size: 1.5rem;
+                color: rgb(70, 146, 238);;
+                margin-bottom: 1rem;
+            }
+
+            form{
+
+               
+                select, input {
+                    @include input_style;
+                }
+
+                button{
+                    @include button(rgb(55, 142, 248), white);
+                    padding: 0.5rem 1rem;
+                    
+                }
+            }
+        }
+    }
+
+
+   
+
 }
+
+// Navigation
 
 header{
 
@@ -41,38 +102,181 @@ header{
 }
 
 .container{
-    margin: 1rem;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 1rem;
+    @include container_stock_styles;
+
+
+    // Title
 
     h1 {
         text-align: center;
-        padding: 10px;
+        padding: 0.75rem 0;
         background-color: #edbf6b;
         color: #fff;
-        margin-bottom: 30px;
+        margin-bottom: 2rem;
+        font-size: initial;
     }
 
-    // next step is to style the filters
+
+    // Filter inputs
 
     .filters {
         display: flex;
         flex-direction:column ;
-        // justify-content: center;
-        // align-items: center;
+        gap: 0.3rem;
 
-        .filter-container{
+        .filter_container{
+            width: 100%;
+
             select{
-                width: 100%;
+              @include input_style;
             }
         }
 
-        .input-group {
+        .input_group {
             display: flex;
+            border:  1px solid $border_color;
+            border-radius: $input_border_radius;
+
+            input{
+                @include input_style;
+                border: none;
+            }
+
+            .input_group_text{
+                display: flex;
+                align-items: center;
+                padding: 0 0.75rem;
+                background-color: rgb(228, 224, 224);
+               
+            }
         }
+    }
+
+
+    // Transactions
+
+    .transactions{
+        margin-top: 1rem;
+        border:  1px solid $border_color;
+
+          span{
+                width: 100%;
+                padding: 0.5rem;
+                &:not(:last-of-type){
+                    border-right: 1px solid $border_color;
+                }
+            }
+
+        .transaction_info{
+            display: flex;
+            font-weight: 800;
+        }
+
+        .transactions_container{
+            li{
+                display: flex;
+
+                span{
+                    border-top: 1px solid $border_color;
+
+                }
+
+                 &:nth-of-type(odd){
+                    background-color: #e9e9e9;
+                }
+            }
+        }
+    }
+
+    button{
+        @include button(rgb(55, 142, 248), white);
     }
 
 }
 
 
+@media screen and (min-width: 575px) {
+
+    // The font size makes everything appear bigger
+    *{
+        font-size: 16px;    
+    }
+
+   .container{
+
+       h1 {
+        font-size: 1.5rem;
+        }
+
+        .filters{
+            flex-direction: row;
+            gap: 0.5rem;
+          
+            .filter_container{
+
+                // This min width goes hand in hand with the last of type selector
+                select{
+                    min-width: 120px;
+                }
+
+                // styling for the Date Range container
+
+                &:last-of-type{
+                    width: 40%;  
+                }
+
+            }
+
+        }
+   }
+}
+
+@media screen and (min-width: 900px) {
+
+    body{
+        .popup{
+            
+            .add_transaction{
+                max-width: 1100px;
+                width: 80%;
+
+                h2{
+                    font-size: 2rem;
+                    width: 100%;
+                    text-align: center;
+                    
+                }
+                
+                form{
+                    width: 100%;
+                    display: flex;
+                    justify-content: center;
+                    gap: 1rem;
+                     
+                     select {
+                     min-width: 130px;
+                    }
+
+                    .add_filter{
+                        align-self: flex-end;
+                    }
+
+                    button{
+                        padding: 0.5rem 1.5rem;
+                        margin: 0;
+                        align-self: flex-end;
+                    }
+
+                }
+            }
+           
+        }
+    }
+
+
+    .container{
+        .filters{
+            gap: 1rem;
+        }
+    }
+}

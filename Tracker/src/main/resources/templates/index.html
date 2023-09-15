@@ -8,7 +8,7 @@
         <title>Budget Tracker</title>
 
 
-        <script src="script.js"></script>
+       
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 
@@ -17,6 +17,39 @@
     </head>
 
     <body>
+
+        <div class="popup overlay">
+            <div class="add_transaction ">
+                <h2>Add transaction</h2>
+
+                 <form >
+
+                    <div class="add_filter">
+                        <label for="select_category">Category:</label>
+                        <select class="form_control" id="select_category">
+                            <option value="">All</option>
+                        </select>
+                    </div>
+
+                    <div class="add_filter">
+                        <label for="start_date_filter">Date:</label>
+                        <input type="date" class="form_control" id="start_date_filter">   
+                    </div>
+
+                    <div class="add_filter">
+                        <label for="ammount">Amount:</label>
+                        <input type="number" class="form_control" id="ammount">   
+                    </div>
+
+                    <div class="add_filter">
+                        <label for="description">Description:</label>
+                        <input type="text" class="form_control" id="description">   
+                    </div>
+
+                    <button type="submit">Add</button>
+                </form>
+            </div>
+        </div>
 
 
         <header>
@@ -38,6 +71,10 @@
     
                 
                 <h1>Budget Tracker - Transactions</h1>
+
+                <button>
+                    Add Transaction
+                </button>
     
                 <div class="filters">
 
@@ -54,8 +91,6 @@
                         <label for="category_filter">Category:</label>
                         <select class="form_control" id="category_filter">
                             <option value="">All</option>
-                            <option data-th-each="category : ${categories}" data-th-text="${category.description}"></option>
-    
                         </select>
                     </div>
 
@@ -64,7 +99,7 @@
                         <div class="input_group">
                             <input type="date" class="form_control" id="start_date_filter">
                             
-                                <span class="input_group_text">to</span>
+                                <span class="input_group_text">to</span> 
                             
                             <input type="date" class="form_control" id="end_date_filter">
                         </div>
@@ -111,15 +146,13 @@
                     </ul>
                 </div>
     
-                <button>
-                    Add Transaction
-                </button>
+              
                  
     
             </div>
         </section>
-
     </body>
+     <script src="script.js"></script>
 </html>
 
 

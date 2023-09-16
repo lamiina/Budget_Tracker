@@ -1,0 +1,23 @@
+@use "../reusable" as *;
+
+header{
+
+    ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        list-style: none;
+        gap: $s_spacing;
+
+        li{
+            background-color: #f5f5f5 ;
+
+            a{
+                text-decoration: none;
+                color: rgb(70, 146, 238);
+
+               
+            }
+        }
+    }
+}

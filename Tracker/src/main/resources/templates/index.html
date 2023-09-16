@@ -7,8 +7,10 @@
 
         <title>Budget Tracker</title>
 
-
-       
+        <!-- SIMPLE BAR SCROLL LIBRARY -->
+        <link rel="stylesheet" href="https://unpkg.com/simplebar@5.3.4/dist/simplebar.min.css">
+        <script src="https://unpkg.com/simplebar@5.3.4/dist/simplebar.min.js"></script>
+        <!--  -->
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 
@@ -18,36 +20,138 @@
 
     <body>
 
-        <div class="popup overlay">
-            <div class="add_transaction ">
-                <h2>Add transaction</h2>
+        <div class="add_transactions_popup overlay hide">
+            <div class="popup_container">
+                <h2>Add Transaction</h2>
 
                  <form >
 
                     <div class="add_filter">
                         <label for="select_category">Category:</label>
-                        <select class="form_control" id="select_category">
+                        <select id="select_category">
                             <option value="">All</option>
                         </select>
                     </div>
 
                     <div class="add_filter">
                         <label for="start_date_filter">Date:</label>
-                        <input type="date" class="form_control" id="start_date_filter">   
+                        <input type="date" id="start_date_filter">   
                     </div>
 
                     <div class="add_filter">
                         <label for="ammount">Amount:</label>
-                        <input type="number" class="form_control" id="ammount">   
+                        <input type="number" id="ammount">   
                     </div>
 
                     <div class="add_filter">
                         <label for="description">Description:</label>
-                        <input type="text" class="form_control" id="description">   
+                        <input type="text" id="description">   
                     </div>
 
-                    <button type="submit">Add</button>
+                    <button type="button" id="add_transaction_btn">Add</button>
                 </form>
+            </div>
+        </div>
+
+         <div class="categories_popup overlay hide">
+            <div class="popup_container">
+                <h2>categories</h2>
+
+                <form>
+                    <div class="add_filter">
+                        <label for="details">Name</label>
+                        <input type="text" id="details">   
+                    </div> 
+
+                    <div class="add_filter">
+                        <label for="select_type">type:</label>
+                        <select id="select_type">
+                            <option value="">All</option>
+                        </select>
+                    </div>
+
+                    <button>add category</button>
+                </form>
+
+                <div class="categories_list_container" >
+                    <div class="categories_info">
+                        <span>name</span>
+                        <span>type</span>
+                    </div>
+
+                    <div class="scrollbar-container">
+    <!-- The scrollbar content (e.g., a div representing the scrollbar) -->
+                    </div>
+    
+                    <ul data-simplebar>
+                        <li>
+                            <span>utilities</span>
+                            <span>expense</span>
+                        </li>
+                        <li>
+                            <span>utilities</span>
+                            <span>expense</span>
+                        </li>
+                        <li>
+                            <span>utilities</span>
+                            <span>expense</span>
+                        </li>
+                        <li>
+                            <span>utilities</span>
+                            <span>expense</span>
+                        </li>
+
+                         <li>
+                            <span>utilities</span>
+                            <span>expense</span>
+                        </li>
+
+                         <li>
+                            <span>utilities</span>
+                            <span>expense</span>
+                        </li>
+
+                         <li>
+                            <span>utilities</span>
+                            <span>expense</span>
+                        </li>
+
+                         <li>
+                            <span>utilities</span>
+                            <span>expense</span>
+                        </li>
+
+                         <li>
+                            <span>utilities</span>
+                            <span>expense</span>
+                        </li>
+
+                         <li>
+                            <span>utilities</span>
+                            <span>expense</span>
+                        </li>
+
+                         <li>
+                            <span>utilities</span>
+                            <span>expense</span>
+                        </li>
+
+                         <li>
+                            <span>utilities</span>
+                            <span>expense</span>
+                        </li>
+
+                         <li>
+                            <span>utilities</span>
+                            <span>expense</span>
+                        </li>
+
+                         <li>
+                            <span>utilities</span>
+                            <span>expense</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -72,9 +176,16 @@
                 
                 <h1>Budget Tracker - Transactions</h1>
 
-                <button>
-                    Add Transaction
-                </button>
+                <div class="buttons">
+
+                    <button>
+                        add transaction
+                    </button>
+    
+                    <button>
+                        categories
+                    </button>
+                </div>
     
                 <div class="filters">
 

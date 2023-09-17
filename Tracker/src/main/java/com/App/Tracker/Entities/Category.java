@@ -1,5 +1,6 @@
 package com.App.Tracker.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import org.antlr.v4.runtime.misc.NotNull;
@@ -9,7 +10,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "categories")
-@JsonIgnoreProperties("transactions")
+@JsonIgnoreProperties({"transactions", "hibernateLazyInitializer"})
 public class Category {
 
     @Id
@@ -19,7 +20,7 @@ public class Category {
     @Column(nullable = false)
     private String description;
 
-    @NotNull
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private CatType type;

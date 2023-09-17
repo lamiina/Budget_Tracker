@@ -1,3 +1,11 @@
+/*
+        http://localhost:8080/transactions - get all, post, put, delete transactions
+        http://localhost:8080/transactions/paged?page={number} - paged get transactions
+
+        http://localhost:8080/categories - get all, post, put, delete categories
+*/
+
+
                     //Accessing DB function
 
 const url = "http://localhost:8080/categories"

@@ -2,14 +2,16 @@ package com.App.Tracker.Services;
 
 import com.App.Tracker.Entities.Category;
 import com.App.Tracker.Entities.Transactions;
-import com.App.Tracker.Entities.TransactionsDTO;
 import com.App.Tracker.Exceptions.NotFoundException;
 import com.App.Tracker.Repo.CategoryRepo;
 import com.App.Tracker.Repo.TransactionsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,46 +28,26 @@ public class TransactionsService {
     }
 
 
-//    public ResponseEntity<List<Transactions>> getAllTransactions() {
-//        return ResponseEntity.ok(this.transactionsRepo.findAll());
-//    }
-
-    public ResponseEntity<List<TransactionsDTO>> getAllTransactions() {
-        List<TransactionsDTO> allTransactions = transactionsRepo.getAllTransactionsDTOs();
-        return ResponseEntity.ok(allTransactions);
+    public ResponseEntity<List<Transactions>> getAllTransactions() {
+        return ResponseEntity.ok(this.transactionsRepo.findAll());
     }
 
-    public ResponseEntity<TransactionsDTO> getTransactionById(long id) {
-        TransactionsDTO transactionDTO = transactionsRepo.getTransactionsDTOById(id);
-
-        if (transactionDTO == null) {
-            // Handle not found scenario
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Transactions> getTransactionById(long id) {
+        Transactions transactionDTO = transactionsRepo.getById(id);
 
         return ResponseEntity.ok(transactionDTO);
     }
+    public ResponseEntity<Page<Transactions>> getAllTransactionsPage(int page, int size){
+        PageRequest pr = PageRequest.of(page,size);
+        Page<Transactions> transactionsPage = transactionsRepo.findAll(pr);
+        return ResponseEntity.ok(transactionsPage);
+    }
 
-    public ResponseEntity<TransactionsDTO> getTransactionsDTOById(long id) {
+    public ResponseEntity<Transactions> getTransactionsDTOById(long id) {
         Transactions transaction = transactionsRepo.findById(id).orElse(null);
 
-        if (transaction == null) {
-            // Handle not found scenario
-            return ResponseEntity.notFound().build();
-        }
 
-        // Initialize the category (eager loading)
-        transaction.getCategory();
-
-        // Create and populate the DTO
-        TransactionsDTO dto = new TransactionsDTO();
-        dto.setId(transaction.getId());
-        dto.setDate(transaction.getDate());
-        dto.setDetails(transaction.getDetails());
-        dto.setAmount(transaction.getAmount());
-        dto.setCategory(transaction.getCategory());
-
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.ok(transaction);
     }
 
     public ResponseEntity<Transactions> addTransaction(Transactions transaction) {

@@ -107,6 +107,7 @@ header ul li a {
 }
 .add_transactions_popup .popup_container .categories_list_container ul li span, .categories_popup .popup_container .categories_list_container ul li span {
   border-top: 1px solid #dddcdc;
+  text-transform: capitalize;
 }
 .add_transactions_popup .popup_container .categories_list_container ul li:nth-of-type(odd), .categories_popup .popup_container .categories_list_container ul li:nth-of-type(odd) {
   background-color: #e9e9e9;
@@ -177,6 +178,9 @@ header ul li a {
 }
 .container .transactions .transactions_container li span {
   border-top: 1px solid #dddcdc;
+}
+.container .transactions .transactions_container li span:last-of-type {
+  text-align: end;
 }
 .container .transactions .transactions_container li:nth-of-type(odd) {
   background-color: #e9e9e9;

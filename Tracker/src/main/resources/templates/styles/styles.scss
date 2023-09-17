@@ -63,6 +63,7 @@
                     span{
                         border-top: 1px solid $border_color;
 
+                        text-transform: capitalize;
                     }
 
                     &:nth-of-type(odd){
@@ -150,6 +151,11 @@
 
                 span{
                     border-top: 1px solid $border_color;
+
+                         &:last-of-type{
+                            text-align: end;
+                        
+                        }
 
                 }
 

@@ -12,6 +12,9 @@
         <script src="https://unpkg.com/simplebar@5.3.4/dist/simplebar.min.js"></script>
         <!--  -->
 
+        
+
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 
         <link rel="stylesheet" href="./styles/styles.css">
@@ -67,6 +70,9 @@
                         <label for="select_type">type:</label>
                         <select id="select_type">
                             <option value="">All</option>
+                            <option value="income">Income</option>
+                            <option value="expense">Expense</option>
+                            <option value="investment">Investment</option>
                         </select>
                     </div>
 
@@ -78,78 +84,9 @@
                         <span>name</span>
                         <span>type</span>
                     </div>
-
-                    <div class="scrollbar-container">
-    <!-- The scrollbar content (e.g., a div representing the scrollbar) -->
-                    </div>
     
-                    <ul data-simplebar>
-                        <li>
-                            <span>utilities</span>
-                            <span>expense</span>
-                        </li>
-                        <li>
-                            <span>utilities</span>
-                            <span>expense</span>
-                        </li>
-                        <li>
-                            <span>utilities</span>
-                            <span>expense</span>
-                        </li>
-                        <li>
-                            <span>utilities</span>
-                            <span>expense</span>
-                        </li>
-
-                         <li>
-                            <span>utilities</span>
-                            <span>expense</span>
-                        </li>
-
-                         <li>
-                            <span>utilities</span>
-                            <span>expense</span>
-                        </li>
-
-                         <li>
-                            <span>utilities</span>
-                            <span>expense</span>
-                        </li>
-
-                         <li>
-                            <span>utilities</span>
-                            <span>expense</span>
-                        </li>
-
-                         <li>
-                            <span>utilities</span>
-                            <span>expense</span>
-                        </li>
-
-                         <li>
-                            <span>utilities</span>
-                            <span>expense</span>
-                        </li>
-
-                         <li>
-                            <span>utilities</span>
-                            <span>expense</span>
-                        </li>
-
-                         <li>
-                            <span>utilities</span>
-                            <span>expense</span>
-                        </li>
-
-                         <li>
-                            <span>utilities</span>
-                            <span>expense</span>
-                        </li>
-
-                         <li>
-                            <span>utilities</span>
-                            <span>expense</span>
-                        </li>
+                    <ul id="categories_list" >
+            
                     </ul>
                 </div>
             </div>
@@ -195,6 +132,7 @@
                             <option value="">All</option>
                             <option value="income">Income</option>
                             <option value="expense">Expense</option>
+                            <option value="investment">Investment</option>
                         </select>
                     </div>
 
@@ -227,7 +165,7 @@
                     </div>
     
                     <ul class="transactions_container">
-                        <li >
+                        <!-- <li >
                             <span>2023-03-21</span>
                             <span>monthly salary</span>
                             <span>salary</span>
@@ -253,7 +191,7 @@
                             <span>monthly salary</span>
                             <span>salary</span>
                             <span>5000.0</span>
-                        </li>
+                        </li> -->
                     </ul>
                 </div>
     

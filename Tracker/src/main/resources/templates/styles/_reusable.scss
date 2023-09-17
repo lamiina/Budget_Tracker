@@ -1,6 +1,10 @@
 $border_color: #dddcdc;
 $input_border_radius: 3px;
 
+$xs_spacing: 0.5rem;
+$s_spacing: 1rem;
+
+
 @mixin button($color, $text_color){
     color: $text_color;
     border: none;
@@ -8,6 +12,13 @@ $input_border_radius: 3px;
     background: $color;
     margin-top: 1rem;
     padding: 0.75rem 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in ;
+    text-transform: capitalize;
+
+    &:hover{
+        background-color: darken($color, 15%);
+    }
 }
 
 @mixin input_style {
@@ -21,4 +32,25 @@ $input_border_radius: 3px;
     max-width: 1100px;
     margin: 0 auto;
     padding: 1rem;
+}
+
+@mixin position_overlay_element_center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 1.5rem;
+    min-width: 250px;
+    
+    background-color: #f5f5f5;
+    border-radius: 10px;
+}
+
+@mixin table_span {
+    width: 100%;
+    padding: $xs_spacing;
+    
+    &:not(:last-of-type){
+        border-right: 1px solid $border_color;
+    }
 }

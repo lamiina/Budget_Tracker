@@ -122,7 +122,7 @@ header ul li a {
   text-align: center;
   padding: 0.75rem 0;
   background-color: #edbf6b;
-  color: #fff;
+  color: rgb(255, 255, 255);
   margin-bottom: 2rem;
   font-size: initial;
 }
@@ -191,7 +191,7 @@ header ul li a {
   margin-bottom: 1rem;
 }
 .container .buttons button {
-  color: white;
+  color: rgb(255, 255, 255);
   border: none;
   border-radius: 3px;
   background: rgb(55, 142, 248);
@@ -203,6 +203,48 @@ header ul li a {
 }
 .container .buttons button:hover {
   background-color: #0867db;
+}
+.container .pagination_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.container .pagination_container button, .container .pagination_container li {
+  color: rgb(255, 255, 255);
+  border: none;
+  border-radius: 3px;
+  background: rgb(55, 142, 248);
+  margin-top: 1rem;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in;
+  text-transform: capitalize;
+}
+.container .pagination_container button:hover, .container .pagination_container li:hover {
+  background-color: #0867db;
+}
+.container .pagination_container li {
+  color: rgb(255, 255, 255);
+  border: none;
+  border-radius: 3px;
+  background: #81b8fb;
+  margin-top: 1rem;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in;
+  text-transform: capitalize;
+}
+.container .pagination_container li:hover {
+  background-color: #378ef9;
+}
+.container .pagination_container .pagination {
+  display: flex;
+  list-style: none;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+.container .pagination_container .current_page {
+  background-color: rgb(55, 142, 248);
 }
 
 @media screen and (min-width: 575px) {

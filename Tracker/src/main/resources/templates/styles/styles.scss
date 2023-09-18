@@ -27,7 +27,7 @@
             }
 
             button{
-                @include button(rgb(55, 142, 248), rgb(255, 255, 255));
+                @include button($button_color, $white, $button_padding);
                 padding: $xs_spacing $s_spacing;
                 
             }
@@ -88,7 +88,7 @@
         text-align: center;
         padding: 0.75rem 0;
         background-color: #edbf6b;
-        color: #fff;
+        color: $white;
         margin-bottom: 2rem;
         font-size: initial;
     }
@@ -172,10 +172,40 @@
         margin-bottom: $s_spacing;
 
         button{
-            @include button(rgb(55, 142, 248), white);
+            @include button($button_color, $white, $button_padding);
         }
     }
 
+
+    .pagination_container{
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+
+        button, li {
+            @include button($button_color, $white, 0.25rem 0.5rem );
+        }
+
+        li{
+            @include button(#81b8fb, $white, 0.25rem 0.5rem );
+
+            //#81b8fb
+        }
+
+        .pagination{
+            display: flex;
+            list-style: none;
+            gap: $xs_spacing;
+            padding: $s_spacing;
+        }
+
+        .current_page{
+            background-color: $button_color
+        }
+    }
+   
 
 }
 

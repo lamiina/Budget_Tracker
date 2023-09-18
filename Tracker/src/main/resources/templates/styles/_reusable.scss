@@ -1,17 +1,22 @@
+$white: rgb(255, 255, 255);
 $border_color: #dddcdc;
+$button_color: rgb(55, 142, 248);
+
 $input_border_radius: 3px;
+
+$button_padding: 0.75rem 0.5rem;
 
 $xs_spacing: 0.5rem;
 $s_spacing: 1rem;
 
 
-@mixin button($color, $text_color){
+@mixin button($color, $text_color, $spacing){
     color: $text_color;
     border: none;
     border-radius: $input_border_radius;
     background: $color;
     margin-top: 1rem;
-    padding: 0.75rem 0.5rem;
+    padding: $spacing;
     cursor: pointer;
     transition: background-color 0.3s ease-in ;
     text-transform: capitalize;

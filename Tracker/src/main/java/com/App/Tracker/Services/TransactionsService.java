@@ -1,5 +1,6 @@
 package com.App.Tracker.Services;
 
+import com.App.Tracker.Entities.CatType;
 import com.App.Tracker.Entities.Category;
 import com.App.Tracker.Entities.Transactions;
 import com.App.Tracker.Exceptions.NotFoundException;
@@ -8,11 +9,15 @@ import com.App.Tracker.Repo.TransactionsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +46,42 @@ public class TransactionsService {
         PageRequest pr = PageRequest.of(page,size);
         Page<Transactions> transactionsPage = transactionsRepo.findAll(pr);
         return ResponseEntity.ok(transactionsPage);
+    }
+    public ResponseEntity<Page<Transactions>> filterTransactions(
+            String startDate,
+            String endDate,
+            String categoryName,
+            String type,
+            int page,
+            int size) {
+
+        Pageable pageable =PageRequest.of(page, size, Sort.by("date").descending());;
+
+        Specification<Transactions> spec = Specification.where(null);
+
+        if (startDate != null) {
+            spec = spec.and((root, query, builder) -> builder.greaterThanOrEqualTo(root.get("date"), startDate));
+        }
+
+        if (endDate != null) {
+            spec = spec.and((root, query, builder) -> builder.lessThanOrEqualTo(root.get("date"), endDate));
+        }
+
+
+        if (categoryName != null) {
+            spec = spec.and((root, query, builder) -> builder.equal(root.get("category").get("description"), categoryName));
+        }
+
+        if (type != null) {
+            CatType enumCategoryType = CatType.valueOf(type); // Assuming CatType is the enum class
+            spec = spec.and((root, query, builder) -> builder.equal(root.get("category").get("type"), enumCategoryType));
+        }
+
+        Page<Transactions> filteredTransactions = transactionsRepo.findAll(spec, pageable);
+
+
+
+        return ResponseEntity.ok(filteredTransactions);
     }
 
     public ResponseEntity<Transactions> getTransactionsDTOById(long id) {

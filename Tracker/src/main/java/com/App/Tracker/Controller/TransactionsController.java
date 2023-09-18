@@ -32,6 +32,17 @@ public class TransactionsController {
             @RequestParam(name = "size", defaultValue = "10") int size) {
         return transactionsService.getAllTransactionsPage(page, size);
     }
+    @GetMapping("/filter")
+    public ResponseEntity<Page<Transactions>> filterTransactions(
+            @RequestParam(name = "startDate", required = false) String startDate,
+            @RequestParam(name = "endDate", required = false) String endDate,
+            @RequestParam(name = "category", required = false) String category,
+            @RequestParam(name = "categoryType", required = false) String type,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
+
+        return transactionsService.filterTransactions(startDate, endDate, category, type, page, size);
+    }
 
     @GetMapping("/{id}")
 

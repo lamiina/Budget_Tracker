@@ -25,50 +25,61 @@
 
         <div class="add_transactions_popup overlay hide">
             <div class="popup_container">
-                <h2>Add Transaction</h2>
 
-                 <form >
+                <div class="top">
+                    <h2>Add Transaction</h2>
+    
+                    <button >X</button>
+                </div>
+
+                 <form id="add_transaction_form">
 
                     <div class="add_filter">
                         <label for="select_category">Category:</label>
-                        <select id="select_category">
+                        <select name="select_category" id="select_category">
                             <option value="">All</option>
                         </select>
                     </div>
 
                     <div class="add_filter">
                         <label for="start_date_filter">Date:</label>
-                        <input type="date" id="start_date_filter">   
+                        <input name="start_date_filter" type="date" id="start_date_filter">   
                     </div>
 
                     <div class="add_filter">
                         <label for="ammount">Amount:</label>
-                        <input type="number" id="ammount">   
+                        <input name="ammount" type="number" id="ammount">   
                     </div>
 
                     <div class="add_filter">
                         <label for="description">Description:</label>
-                        <input type="text" id="description">   
+                        <input name="description" type="text" id="description">   
                     </div>
 
-                    <button type="button" id="add_transaction_btn">Add</button>
+                    <button type="submit" id="add_transaction_btn">Add</button>
+
+                    <p class="error_text" id="error_text"></p>
                 </form>
             </div>
         </div>
 
          <div class="categories_popup overlay hide">
             <div class="popup_container">
-                <h2>categories</h2>
+                 <div class="top">
+                    <h2>Categories</h2>
+    
+                    <button >X</button>
+                </div>
 
                 <form>
                     <div class="add_filter">
                         <label for="details">Name</label>
-                        <input type="text" id="details">   
+                        <input name="details" type="text" id="details">   
                     </div> 
 
                     <div class="add_filter">
                         <label for="select_type">type:</label>
-                        <select id="select_type">
+                        <select name="select_type" id="select_type">
                             <option value="">All</option>
                             <option value="income">Income</option>
                             <option value="expense">Expense</option>

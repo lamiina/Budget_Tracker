@@ -146,6 +146,8 @@ const loadElements = (parent, url, childTemplate) => {
 }
 
 
+                    // PAGINATION FUNCTIONALITY
+
 const paginationContainer = document.getElementById("pagination_container")
 const pagination = document.getElementById("pagination")
 
@@ -172,14 +174,6 @@ const loadPagination = (pages) => {
             currentSelectedPage.classList.remove("current_page")
 
             e.target.classList.add("current_page")
-
-            // const childArray = Array.from(pagination.children)
-
-            // childArray.map(element => {
-            //     if(element.classList.contains("current_page")){
-            //         console.log(element)
-            //     }
-            // }
         })
 
         pagination.appendChild(paginationElement)
@@ -215,7 +209,7 @@ const addFunctionalityToPaginationButtons = () => {
 addFunctionalityToPaginationButtons()
 
 
-// Loading the app for the first time
+// Loading when app starts
 
 loadElements(categoryFilters, categoriesURL, filterOption)
 loadElements(transactions, paginationURL, transaction)
@@ -227,8 +221,6 @@ loadElements(simpleBarContainer, categoriesURL, categoryElement)
 
 
 
-// here I will need to make a function that loops through the transactions that need to be displayed and append them - if you need reference you have it is some old folders 
-
 // Function for adding/removing popups
 
 const handlePopup = () => {
@@ -236,14 +228,15 @@ const handlePopup = () => {
 }
 
 
-// Add transaction functionality
+                                        // Add transaction functionality
 
 const addTransactionTrigger = document.body.querySelector(".container button")
 const addTransactionPopup = document.body.querySelector(
   ".add_transactions_popup"
 )
+const addTransactionForm = document.getElementById("add_transaction_form")
 
-const addTransactionBtn = document.getElementById("add_transaction_btn")
+const addTransactionBtn = document.getElementById("add_transaction_btn") // might need deletion
 console.log(addTransactionTrigger)
 
 
@@ -252,14 +245,69 @@ addTransactionTrigger.addEventListener("click", () => {
    addTransactionPopup.classList.remove("hide")
 })
 
-addTransactionBtn.addEventListener("click", () => {
-    addTransactionPopup.classList.add("hide")
+// load categories inside add transaction | loading when app starts
+
+
+const selectCategoryContainer = document.getElementById("select_category")
+loadElements(selectCategoryContainer, categoriesURL,filterOption)
+
+
+
+
+
+addTransactionForm.addEventListener("submit", (e) => {
+  e.preventDefault()
+
+  const formData = new FormData(e.currentTarget)
+  const formObject = Object.fromEntries(formData)
+
+
+  // THE API DOES NOT ACCEPT MY FORMAT, I NEED THE RIGHT FORMAT
+
+  const sendTransactionToDataBase = (object) => {
+    fetch("http://localhost:8080/transactions", {
+      method: "POST",
+      body: object,
+
+    }).then((data) => {
+       
+        console.log("Server response:", data)
+      })
+      .catch((error) => {
+        
+        console.error("Fetch error:", error)
+      })
+  }
+
+  sendTransactionToDataBase(formObject)
+
+
+
+
+  // YOU WILL NEED TO MAKE SOME VALIDATION HERE BEFORE SENDING THE OBJECT TO THE API
+
+  getData(transactionsURL).then((data) => {
+    console.log(data, formObject)
+  })
+  // addTransactionPopup.classList.add("hide")
 })
 
 
 
 
-//  Categories functionality 
+
+
+
+// here Maybe I can do a function that takes parent popup and applies all the click events at least for closing the popup
+
+const closeButtons = document.body.querySelectorAll(".top button")
+
+console.log(closeButtons)
+
+
+
+
+                                    //  Categories functionality 
 
 const categoriesTrigger = document.body.querySelector(
   ".container button:last-of-type"
@@ -275,3 +323,9 @@ categoriesTrigger.addEventListener("click", () => {
 })
 
 
+// next time
+
+// add close pop-up functionality
+// - categories from index need to show what type of category they are 
+// make validation for the add transaction
+// get object format for DB

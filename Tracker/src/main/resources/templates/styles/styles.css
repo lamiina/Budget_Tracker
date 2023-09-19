@@ -56,7 +56,27 @@ header ul li a {
   background-color: #f5f5f5;
   border-radius: 10px;
 }
-.add_transactions_popup .popup_container h2, .categories_popup .popup_container h2 {
+.add_transactions_popup .popup_container .top, .categories_popup .popup_container .top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.add_transactions_popup .popup_container .top button, .categories_popup .popup_container .top button {
+  color: rgb(255, 255, 255);
+  border: none;
+  border-radius: 3px;
+  background: rgb(236, 91, 91);
+  margin-top: 1rem;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in;
+  text-transform: capitalize;
+  margin: 0 0 0.688rem 0;
+}
+.add_transactions_popup .popup_container .top button:hover, .categories_popup .popup_container .top button:hover {
+  background-color: #e01a1a;
+}
+.add_transactions_popup .popup_container .top h2, .categories_popup .popup_container .top h2 {
   font-size: 1.5rem;
   color: rgb(70, 146, 238);
   margin-bottom: 1rem;

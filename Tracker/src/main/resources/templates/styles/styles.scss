@@ -10,11 +10,25 @@
     .popup_container{
         @include position_overlay_element_center;
 
-        h2{
-            font-size: 1.5rem;
-            color: rgb(70, 146, 238);;
-            margin-bottom: $s_spacing;
-            text-transform: capitalize
+        .top{
+            display: flex;
+            // align-items: center;
+            justify-content: space-between;
+            align-items: center;
+
+            button{
+                @include button(rgb(236, 91, 91), $white, 0.25rem 0.5rem);
+                // align-self: flex-start;
+                margin: 0 0 0.688rem 0;
+            }
+
+            h2{
+                font-size: 1.5rem;
+                color: rgb(70, 146, 238);;
+                margin-bottom: $s_spacing;
+                text-transform: capitalize;
+                
+            }
         }
 
 

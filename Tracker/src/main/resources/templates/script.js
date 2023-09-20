@@ -29,9 +29,6 @@ const getData = async (url) => {
 
 }
 
-// getData(url)
-getData(transactionsURL)
-
 
                     // Loading application functionality
 
@@ -66,6 +63,16 @@ const filterOption = (args) => {
     option.innerText = description
 
    return option
+}
+
+const filterOptionTransaction = (args) => {
+  const { description, type } = args
+
+  const option = document.createElement("option")
+  option.value = `${description}-${type.toLowerCase()}`
+  option.innerText = `${description}-${type.toLowerCase()}`
+
+  return option
 }
 
 const transaction = (args) => {
@@ -231,13 +238,11 @@ const handlePopup = () => {
                                         // Add transaction functionality
 
 const addTransactionTrigger = document.body.querySelector(".container button")
-const addTransactionPopup = document.body.querySelector(
-  ".add_transactions_popup"
-)
+const addTransactionPopup = document.body.querySelector(".add_transactions_popup")
 const addTransactionForm = document.getElementById("add_transaction_form")
 
 const addTransactionBtn = document.getElementById("add_transaction_btn") // might need deletion
-console.log(addTransactionTrigger)
+const closeAddTransaction = document.body.querySelector(".add_transactions_popup .top button")
 
 
 // events for add transaction
@@ -245,76 +250,134 @@ addTransactionTrigger.addEventListener("click", () => {
    addTransactionPopup.classList.remove("hide")
 })
 
-// load categories inside add transaction | loading when app starts
-
-
-const selectCategoryContainer = document.getElementById("select_category")
-loadElements(selectCategoryContainer, categoriesURL,filterOption)
-
-
-
-
-
-addTransactionForm.addEventListener("submit", (e) => {
-  e.preventDefault()
-
-  const formData = new FormData(e.currentTarget)
-  const formObject = Object.fromEntries(formData)
-
-
-  // THE API DOES NOT ACCEPT MY FORMAT, I NEED THE RIGHT FORMAT
-
-  const sendTransactionToDataBase = (object) => {
-    fetch("http://localhost:8080/transactions", {
-      method: "POST",
-      body: object,
-
-    }).then((data) => {
-       
-        console.log("Server response:", data)
-      })
-      .catch((error) => {
-        
-        console.error("Fetch error:", error)
-      })
-  }
-
-  sendTransactionToDataBase(formObject)
-
-
-
-
-  // YOU WILL NEED TO MAKE SOME VALIDATION HERE BEFORE SENDING THE OBJECT TO THE API
-
-  getData(transactionsURL).then((data) => {
-    console.log(data, formObject)
-  })
-  // addTransactionPopup.classList.add("hide")
+closeAddTransaction.addEventListener("click", () => {
+  addTransactionPopup.classList.add("hide")
 })
 
 
 
 
 
+// load categories inside add transaction | loading when app starts
 
 
-// here Maybe I can do a function that takes parent popup and applies all the click events at least for closing the popup
+const selectCategoryContainer = document.getElementById("select_category")
 
-const closeButtons = document.body.querySelectorAll(".top button")
+loadElements(selectCategoryContainer, categoriesURL, filterOptionTransaction)
 
-console.log(closeButtons)
+// ADD TRANSACTION FORM
+
+const errorContainerTransactions = document.getElementById("error_text_transactions")
+
+const sendToDataBase = (url, object) => {
+  fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: object,
+  })
+    .then((data) => {
+      console.log("Server response:", data)
+    })
+    .catch((error) => {
+      console.error("Fetch error:", error)
+    })
+}
+
+
+
+const checkIfDescriptionAndTypeMatch = (description, type, category) => {
+    const findHalf = category.indexOf("-")
+
+    const categoryName = category.slice(0, findHalf).toLowerCase()
+    const categoryType = category.slice(findHalf + 1, category.length).toLowerCase()
+
+    const nameFromOutside = description.toLowerCase()
+    const typeFromOutside = type.toLowerCase()
+
+    return categoryName === nameFromOutside && categoryType === typeFromOutside
+  
+}
+
+
+const validation = (object, e) => {
+
+  for (const key in object) {
+    if (object[key].length <= 0) {
+      errorContainerTransactions.innerText = "Please fill all inputs"
+      document.querySelector(`[name = ${key}]`).classList.add("error")
+
+    } else {
+      document.querySelector(`[name = ${key}]`).classList.remove("error")
+    }
+  }
+
+  const errorContainers = document.querySelectorAll(
+    ".add_transactions_popup .error"
+  )
+
+  const checkIfContainsError = () => {
+    for (const element of errorContainers) {
+      if (element.classList.contains("error")) {
+        return true
+      }
+    }
+    return false
+  }
+
+
+  if (!checkIfContainsError()) {
+    errorContainerTransactions.innerText = ""
+      e.target.reset()
+
+    getData(categoriesURL).then((data) => {
+
+      data.filter((category) => {
+        const { description, type, id } = category
+
+        if (checkIfDescriptionAndTypeMatch(description, type, object.category)) {
+
+          const newObj = {...object}
+          
+           
+          newObj.category = {
+            id: id
+          }
+
+            const jsonObject = JSON.stringify(newObj)
+
+            sendToDataBase(transactionsURL, jsonObject) 
+            loadTransactions(transactions, paginationURL, transaction, true) 
+
+          return
+        }
+      })
+    })
+  }
+}
+
+addTransactionForm.addEventListener("submit", (e) => {
+    e.preventDefault()
+
+    const formData = new FormData(e.currentTarget)
+    const formObject = Object.fromEntries(formData)
+
+    validation(formObject, e)
+
+})
 
 
 
 
                                     //  Categories functionality 
 
-const categoriesTrigger = document.body.querySelector(
-  ".container button:last-of-type"
+const categoriesTrigger = document.body.querySelector(".container button:last-of-type")
+const categoriesPopup = document.body.querySelector(".categories_popup")
+const closeCategories = document.body.querySelector(
+  ".categories_popup .top button"
 )
-const categoriesPopup = document.body.querySelector(
-  ".categories_popup"
-)
+
 
 // events for categories
 
@@ -322,10 +385,16 @@ categoriesTrigger.addEventListener("click", () => {
     categoriesPopup.classList.remove("hide")
 })
 
+closeCategories.addEventListener("click", () => {
+  categoriesPopup.classList.add("hide")
+})
+
+
+
+
 
 // next time
 
-// add close pop-up functionality
 // - categories from index need to show what type of category they are 
 // make validation for the add transaction
 // get object format for DB

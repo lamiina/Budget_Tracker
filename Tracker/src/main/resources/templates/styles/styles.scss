@@ -12,13 +12,11 @@
 
         .top{
             display: flex;
-            // align-items: center;
             justify-content: space-between;
             align-items: center;
 
             button{
-                @include button(rgb(236, 91, 91), $white, 0.25rem 0.5rem);
-                // align-self: flex-start;
+                @include button($error_red, $white, 0.25rem 0.5rem);
                 margin: 0 0 0.688rem 0;
             }
 
@@ -34,19 +32,35 @@
 
         // this part is for the add transaction
         form{
-
             
             select, input {
                 @include input_style;
+            }
+            
+            select{
+                text-transform: capitalize
             }
 
             button{
                 @include button($button_color, $white, $button_padding);
                 padding: $xs_spacing $s_spacing;
                 
+                width: 100%;
+                
             }
-        }
 
+            .error{
+                outline: 1px solid rgb(255, 0, 0);
+            }
+
+        }
+        
+        .error_text{
+            padding-top: $s_spacing;
+            color: $error_red;
+            text-align: center;
+        }
+        
 
 
         // this part is for categories list
@@ -290,12 +304,15 @@
                         align-self: flex-end;
                     }
 
+
+                    
                     button{
                         padding: $xs_spacing 1.5rem;
                         margin: 0;
                         align-self: flex-end;
+                        width: initial;
                     }
-
+                    
                 }
             }
         }

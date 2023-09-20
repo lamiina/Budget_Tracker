@@ -88,6 +88,9 @@ header ul li a {
   border-radius: 3px;
   border: 1px solid #dddcdc;
 }
+.add_transactions_popup .popup_container form select, .categories_popup .popup_container form select {
+  text-transform: capitalize;
+}
 .add_transactions_popup .popup_container form button, .categories_popup .popup_container form button {
   color: rgb(255, 255, 255);
   border: none;
@@ -99,9 +102,18 @@ header ul li a {
   transition: background-color 0.3s ease-in;
   text-transform: capitalize;
   padding: 0.5rem 1rem;
+  width: 100%;
 }
 .add_transactions_popup .popup_container form button:hover, .categories_popup .popup_container form button:hover {
   background-color: #0867db;
+}
+.add_transactions_popup .popup_container form .error, .categories_popup .popup_container form .error {
+  outline: 1px solid rgb(255, 0, 0);
+}
+.add_transactions_popup .popup_container .error_text, .categories_popup .popup_container .error_text {
+  padding-top: 1rem;
+  color: rgb(236, 91, 91);
+  text-align: center;
 }
 .add_transactions_popup .popup_container .categories_list_container, .categories_popup .popup_container .categories_list_container {
   margin-top: 1rem;
@@ -311,6 +323,7 @@ header ul li a {
     padding: 0.5rem 1.5rem;
     margin: 0;
     align-self: flex-end;
+    width: initial;
   }
   body .categories_popup .popup_container {
     max-width: 700px;

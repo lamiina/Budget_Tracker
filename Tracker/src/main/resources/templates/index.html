@@ -33,33 +33,36 @@
                 </div>
 
                  <form id="add_transaction_form">
+                     
+                    <div class="add_filter">
+                         <label for="start_date_filter">Date:</label>
+                         <input name="date" type="date" id="start_date_filter">   
+                     </div>
+
+                     <div class="add_filter">
+                         <label for="description">Description:</label>
+                         <input name="details" type="text" id="description">   
+                     </div>
+
+                     <div class="add_filter">
+                         <label for="amount">Amount:</label>
+                         <input name="amount" type="number" id="amount">   
+                     </div>
 
                     <div class="add_filter">
                         <label for="select_category">Category:</label>
-                        <select name="select_category" id="select_category">
+                        <select name="category" id="select_category">
                             <option value="">All</option>
                         </select>
                     </div>
 
-                    <div class="add_filter">
-                        <label for="start_date_filter">Date:</label>
-                        <input name="start_date_filter" type="date" id="start_date_filter">   
-                    </div>
 
-                    <div class="add_filter">
-                        <label for="ammount">Amount:</label>
-                        <input name="ammount" type="number" id="ammount">   
-                    </div>
-
-                    <div class="add_filter">
-                        <label for="description">Description:</label>
-                        <input name="description" type="text" id="description">   
-                    </div>
-
+                    
                     <button type="submit" id="add_transaction_btn">Add</button>
-
-                    <p class="error_text" id="error_text"></p>
+                    
+                    
                 </form>
+                <p class="error_text" id="error_text_transactions"></p>
             </div>
         </div>
 
@@ -88,6 +91,7 @@
                     </div>
 
                     <button>add category</button>
+                    <p class="error_text" id="error_text_category"></p>
                 </form>
 
                 <div class="categories_list_container" >

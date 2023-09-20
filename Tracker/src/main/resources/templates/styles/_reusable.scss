@@ -1,6 +1,7 @@
 $white: rgb(255, 255, 255);
 $border_color: #dddcdc;
 $button_color: rgb(55, 142, 248);
+$error_red: rgb(236, 91, 91);
 
 $input_border_radius: 3px;
 
@@ -15,7 +16,7 @@ $s_spacing: 1rem;
     border: none;
     border-radius: $input_border_radius;
     background: $color;
-    margin-top: 1rem;
+    margin-top: $s_spacing;
     padding: $spacing;
     cursor: pointer;
     transition: background-color 0.3s ease-in ;

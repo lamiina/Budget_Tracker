@@ -1,3 +1,35 @@
+@-webkit-keyframes popIN {
+  0% {
+    top: -70px;
+  }
+  100% {
+    top: 20px;
+  }
+}
+@keyframes popIN {
+  0% {
+    top: -70px;
+  }
+  100% {
+    top: 20px;
+  }
+}
+@-webkit-keyframes popOUT {
+  0% {
+    top: 20px;
+  }
+  100% {
+    top: -70px;
+  }
+}
+@keyframes popOUT {
+  0% {
+    top: 20px;
+  }
+  100% {
+    top: -70px;
+  }
+}
 * {
   box-sizing: border-box;
   margin: 0;
@@ -28,7 +60,7 @@ body {
   background: rgba(0, 0, 0, 0.5);
   width: 100vw;
   height: 100vh;
-  z-index: 6;
+  z-index: 2;
 }
 
 header ul {
@@ -44,6 +76,24 @@ header ul li {
 header ul li a {
   text-decoration: none;
   color: rgb(70, 146, 238);
+}
+
+.success_message {
+  position: fixed;
+  border: 1px solid rgb(70, 146, 238);
+  background-color: rgb(255, 255, 255);
+  border-radius: 15px;
+  z-index: 3;
+  left: 50%;
+  top: 20px;
+  transform: translate(-50%);
+  -webkit-animation: popIN 0.4s ease-in-out;
+          animation: popIN 0.4s ease-in-out;
+}
+.success_message p {
+  white-space: nowrap;
+  padding: 1rem;
+  width: 100%;
 }
 
 .add_transactions_popup .popup_container, .categories_popup .popup_container {

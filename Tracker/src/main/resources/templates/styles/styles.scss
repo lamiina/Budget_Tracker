@@ -5,6 +5,25 @@
 @use "./components/header";
 
 
+.success_message{
+    position: fixed;
+    border: 1px solid rgb(70, 146, 238);
+    background-color: $white;
+    border-radius: 15px;
+    z-index: 3;
+    
+    left: 50%;
+    top: 20px;
+    transform: translate(-50%);
+    animation: popIN 0.4s ease-in-out;
+
+    p{
+        white-space: nowrap;
+        padding: 1rem;
+        width: 100%;
+    }
+}
+
 .add_transactions_popup, .categories_popup{
     
     .popup_container{

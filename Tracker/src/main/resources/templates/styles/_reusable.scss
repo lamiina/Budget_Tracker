@@ -60,3 +60,27 @@ $s_spacing: 1rem;
         border-right: 1px solid $border_color;
     }
 }
+
+
+@keyframes popIN {
+    0%{
+        top: -70px;
+    }
+
+
+    100%{
+        top: 20px;
+    }
+}
+
+@keyframes popOUT {
+    0%{
+        
+        top: 20px;
+    }
+
+
+    100%{
+       top: -70px;
+    }
+}

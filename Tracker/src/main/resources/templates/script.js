@@ -10,7 +10,6 @@
 
 const categoriesURL = "http://localhost:8080/categories"
 const transactionsURL = "http://localhost:8080/transactions"
-
 const paginationURL = "http://localhost:8080/transactions/paged?page=0"
 
 const getData = async (url) => {
@@ -228,9 +227,27 @@ loadElements(simpleBarContainer, categoriesURL, categoryElement)
 
 
 
-// Function for adding/removing popups
+// Function for displaying submission success for category or transaction
+ const successMessageContainer = document.getElementById("success_message")
 
-const handlePopup = () => {
+const successMessage = (message) => {
+    successMessageContainer.innerHTML = `<p>${message}</p>`
+    successMessageContainer.classList.remove("hide")
+
+    successMessageContainer.style.animationName = "popIN"
+
+
+    setTimeout(() => {
+       
+        successMessageContainer.style.animationName = "popOUT"
+
+        successMessageContainer.addEventListener("animationend", () => {
+        successMessageContainer.classList.add("hide")
+        successMessageContainer.style.animationName = "" 
+
+       },{ once: true }
+     )
+    }, 2000)
 
 }
 
@@ -245,25 +262,44 @@ const addTransactionBtn = document.getElementById("add_transaction_btn") // migh
 const closeAddTransaction = document.body.querySelector(".add_transactions_popup .top button")
 
 
+// function for removing the errors of the popips when closed
+
+ const undoErrors = (parent) => {
+   const elements = document.querySelectorAll(`${parent} [name]`)
+   const textError = document.querySelector(`${parent} .error_text`)
+
+   textError.innerText = ""
+
+   for (const el of elements) {
+      el.value = ""
+     if (el.classList.contains("error")) {
+       el.classList.remove("error")
+     }
+   }
+ }
+
+
 // events for add transaction
+
 addTransactionTrigger.addEventListener("click", () => {
-   addTransactionPopup.classList.remove("hide")
+    addTransactionPopup.classList.remove("hide")
 })
 
 closeAddTransaction.addEventListener("click", () => {
-  addTransactionPopup.classList.add("hide")
+
+    undoErrors(".add_transactions_popup")
+    console.log(document.querySelectorAll(`.add_transactions_popup [name]`))
+
+
+    addTransactionPopup.classList.add("hide")
 })
-
-
-
-
 
 // load categories inside add transaction | loading when app starts
 
-
 const selectCategoryContainer = document.getElementById("select_category")
-
 loadElements(selectCategoryContainer, categoriesURL, filterOptionTransaction)
+
+
 
 // ADD TRANSACTION FORM
 
@@ -300,7 +336,6 @@ const checkIfDescriptionAndTypeMatch = (description, type, category) => {
   
 }
 
-
 const validation = (object, e) => {
 
   for (const key in object) {
@@ -326,7 +361,6 @@ const validation = (object, e) => {
     return false
   }
 
-
   if (!checkIfContainsError()) {
     errorContainerTransactions.innerText = ""
       e.target.reset()
@@ -349,7 +383,7 @@ const validation = (object, e) => {
 
             sendToDataBase(transactionsURL, jsonObject) 
             loadTransactions(transactions, paginationURL, transaction, true) 
-
+             successMessage("Transaction has been added!")
           return
         }
       })
@@ -364,6 +398,7 @@ addTransactionForm.addEventListener("submit", (e) => {
     const formObject = Object.fromEntries(formData)
 
     validation(formObject, e)
+
 
 })
 
@@ -388,13 +423,3 @@ categoriesTrigger.addEventListener("click", () => {
 closeCategories.addEventListener("click", () => {
   categoriesPopup.classList.add("hide")
 })
-
-
-
-
-
-// next time
-
-// - categories from index need to show what type of category they are 
-// make validation for the add transaction
-// get object format for DB

@@ -56,11 +56,16 @@ body {
 }
 
 .overlay {
-  position: absolute;
+  position: fixed;
   background: rgba(0, 0, 0, 0.5);
   width: 100vw;
   height: 100vh;
   z-index: 2;
+}
+
+.stop_scroll {
+  overflow-y: hidden;
+  width: 100%;
 }
 
 header ul {
@@ -80,7 +85,7 @@ header ul li a {
 
 .success_message {
   position: fixed;
-  border: 1px solid rgb(70, 146, 238);
+  border: 3px solid #edbf6b;
   background-color: rgb(255, 255, 255);
   border-radius: 15px;
   z-index: 3;

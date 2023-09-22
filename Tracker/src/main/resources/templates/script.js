@@ -5,6 +5,12 @@
         http://localhost:8080/categories - get all, post, put, delete categories
 */
 
+// query for filtering and pagination
+// http://localhost:8080/transactions/filter?categoryType=EXPENSE&page=0&size=10
+
+// full query containing all filters
+//http://localhost:8080/transactions/filter?startDate=2023-08-01&endDate=2023-08-31&category=Food&categoryType=EXPENSE&page=0&size=10
+
 
                     //Accessing DB function
 
@@ -91,7 +97,35 @@ const transaction = (args) => {
     return element
 }
 
-const categoryElement = (args) => {
+
+// THIS IS UNFINISHED
+
+
+const deleteFromDataBase = (url, itemIdToDelete) => {
+     
+
+     fetch(`${url}/${itemIdToDelete}`, {
+       method: "DELETE",
+       headers: {
+         "Content-Type": "application/json"
+       },
+     })
+       .then((response) => {
+         if (!response.ok) {
+           throw new Error(`Failed to delete item (status ${response.status})`)
+         }
+         return response.json() 
+       })
+       .then((data) => {
+         console.log("Item deleted successfully", data)
+       })
+       .catch((error) => {
+         console.error("Error:", error)
+       })
+} 
+
+
+const categoryElement = (args, func) => {
     const {description, type} = args
     
     const element = listElement( 
@@ -110,11 +144,19 @@ const categoryElement = (args) => {
 
 
 const load = (parent,items, childTemplate) => {
-  items.map((element) => {
-    const { ...args } = element
-    const child = childTemplate(args)
-    parent.appendChild(child)
-  })
+    
+    items.map((element, index) => {
+        const { ...args } = element
+        const child = childTemplate(args)
+
+        if (index === 0 && child.tagName === "OPTION") {
+          const stockOption = document.createElement("option")
+          stockOption.innerText = "All"
+          stockOption.value = ""
+          parent.appendChild(stockOption)
+        }
+        parent.appendChild(child)
+    })
 }
 
 // load transactions takes as last parameter a boolean to signify if the pagination should be updated or not
@@ -138,6 +180,7 @@ const loadTransactions = (parent, url, childTemplate, ifPagination) => {
 
 const loadElements = (parent, url, childTemplate) => {
     
+    parent.innerHTML = ""
     getData(url).then(data => {
 
         if(Array.isArray(data)){
@@ -247,7 +290,7 @@ const successMessage = (message) => {
 
        },{ once: true }
      )
-    }, 2000)
+    }, 3000)
 
 }
 
@@ -262,37 +305,47 @@ const addTransactionBtn = document.getElementById("add_transaction_btn") // migh
 const closeAddTransaction = document.body.querySelector(".add_transactions_popup .top button")
 
 
-// function for removing the errors of the popips when closed
+// function for removing the errors of the popups when closed
 
- const undoErrors = (parent) => {
-   const elements = document.querySelectorAll(`${parent} [name]`)
-   const textError = document.querySelector(`${parent} .error_text`)
+const undoErrors = (parent) => {
+    const elements = parent.querySelectorAll(`[name]`)
+    const textError = parent.querySelector(`.error_text`)
 
-   textError.innerText = ""
+    console.log(elements)
 
-   for (const el of elements) {
-      el.value = ""
-     if (el.classList.contains("error")) {
-       el.classList.remove("error")
-     }
-   }
- }
+    textError.innerText = ""
+
+    for (const el of elements) {
+        el.value = ""
+        if (el.classList.contains("error")) {
+        el.classList.remove("error")
+        }
+    }
+}
+
+const popupFunctionality = (pop, close, parent) => {
+
+    pop.addEventListener("click", () => {
+      parent.classList.remove("hide")
+      document.body.classList.add("stop_scroll")
+    })
+
+    close.addEventListener("click", (e) => {
+      undoErrors(parent)
+      document.body.classList.remove("stop_scroll")
+      parent.classList.add("hide")
+    })
+
+}
+
+
+
 
 
 // events for add transaction
 
-addTransactionTrigger.addEventListener("click", () => {
-    addTransactionPopup.classList.remove("hide")
-})
+popupFunctionality(addTransactionTrigger, closeAddTransaction, addTransactionPopup)
 
-closeAddTransaction.addEventListener("click", () => {
-
-    undoErrors(".add_transactions_popup")
-    console.log(document.querySelectorAll(`.add_transactions_popup [name]`))
-
-
-    addTransactionPopup.classList.add("hide")
-})
 
 // load categories inside add transaction | loading when app starts
 
@@ -305,7 +358,7 @@ loadElements(selectCategoryContainer, categoriesURL, filterOptionTransaction)
 
 const errorContainerTransactions = document.getElementById("error_text_transactions")
 
-const sendToDataBase = (url, object) => {
+const sendToDataBase = (url, object, load) => {
   fetch(url, {
     method: "POST",
     headers: {
@@ -313,8 +366,16 @@ const sendToDataBase = (url, object) => {
     },
     body: object,
   })
-    .then((data) => {
-      console.log("Server response:", data)
+    .then((response) => {
+      console.log("Server response:", response)
+
+      if(response.status === 500){
+        successMessage("Category already exists!")
+      } 
+      if(response.status === 201){
+        load()
+
+      }
     })
     .catch((error) => {
       console.error("Fetch error:", error)
@@ -336,58 +397,68 @@ const checkIfDescriptionAndTypeMatch = (description, type, category) => {
   
 }
 
-const validation = (object, e) => {
+const validation = (object, e, errorTextContainer) => {
 
   for (const key in object) {
     if (object[key].length <= 0) {
-      errorContainerTransactions.innerText = "Please fill all inputs"
-      document.querySelector(`[name = ${key}]`).classList.add("error")
-
+      errorTextContainer.innerText = "Please fill all inputs"
+      e.target.querySelector(`[name = ${key}]`).classList.add("error")
     } else {
-      document.querySelector(`[name = ${key}]`).classList.remove("error")
+      e.target.querySelector(`[name = ${key}]`).classList.remove("error")
     }
   }
+}
 
-  const errorContainers = document.querySelectorAll(
-    ".add_transactions_popup .error"
-  )
+const checkIfContainsError = (e) => {
+    const errorContainers = e.target.querySelectorAll(".error")
 
-  const checkIfContainsError = () => {
     for (const element of errorContainers) {
-      if (element.classList.contains("error")) {
+        if (element.classList.contains("error")) {
         return true
-      }
+        }
     }
+
     return false
-  }
+}
 
-  if (!checkIfContainsError()) {
-    errorContainerTransactions.innerText = ""
-      e.target.reset()
-
+const postTransaction = (object) => {
+    
     getData(categoriesURL).then((data) => {
-
       data.filter((category) => {
         const { description, type, id } = category
 
-        if (checkIfDescriptionAndTypeMatch(description, type, object.category)) {
+        if (
+          checkIfDescriptionAndTypeMatch(description, type, object.category)
+        ) {
+          const newObj = { ...object }
 
-          const newObj = {...object}
-          
-           
           newObj.category = {
-            id: id
+            id: id,
           }
 
-            const jsonObject = JSON.stringify(newObj)
+          const jsonObject = JSON.stringify(newObj)
 
-            sendToDataBase(transactionsURL, jsonObject) 
-            loadTransactions(transactions, paginationURL, transaction, true) 
-             successMessage("Transaction has been added!")
+          sendToDataBase(transactionsURL, jsonObject)
+          loadTransactions(transactions, paginationURL, transaction, true)
+          successMessage("Transaction has been added!")
           return
         }
       })
     })
+}
+
+const processValidation = (object, e, successFunc) => {
+
+  const errorTextContainer = e.target.parentNode.querySelector(".error_text")  
+
+  validation(object, e, errorTextContainer)
+
+  
+  if (!checkIfContainsError(e)) {
+    errorTextContainer.innerText = ""
+    e.target.reset()
+
+    successFunc(object)
   }
 }
 
@@ -397,29 +468,58 @@ addTransactionForm.addEventListener("submit", (e) => {
     const formData = new FormData(e.currentTarget)
     const formObject = Object.fromEntries(formData)
 
-    validation(formObject, e)
+    processValidation(formObject, e, postTransaction)
 
 
 })
-
-
 
 
                                     //  Categories functionality 
 
 const categoriesTrigger = document.body.querySelector(".container button:last-of-type")
 const categoriesPopup = document.body.querySelector(".categories_popup")
-const closeCategories = document.body.querySelector(
-  ".categories_popup .top button"
-)
+const closeCategories = document.body.querySelector(".categories_popup .top button")
+const categoriesForm = document.body.querySelector(".categories_popup form")
 
 
 // events for categories
 
-categoriesTrigger.addEventListener("click", () => {
-    categoriesPopup.classList.remove("hide")
+popupFunctionality(categoriesTrigger, closeCategories, categoriesPopup)
+
+
+const postCategory = (object) => {
+
+  const formObject = {...object}
+  formObject.type = object.type.toUpperCase()
+
+  const jsonObject = JSON.stringify(formObject)
+
+  sendToDataBase(categoriesURL, jsonObject, () => {loadElements(simpleBarContainer, categoriesURL, categoryElement)})
+ 
+  successMessage("Category has been added!")
+}
+
+
+categoriesForm.addEventListener("submit", (e) => {
+    e.preventDefault()
+
+
+    const formData = new FormData(e.currentTarget)
+    const formObject = Object.fromEntries(formData)
+
+    processValidation(formObject, e, postCategory)
 })
 
-closeCategories.addEventListener("click", () => {
-  categoriesPopup.classList.add("hide")
-})
+
+
+// YOU SHOULD FIRST TEST OUT HOW THE QUERY WORKS FIRST
+
+// filter functionality
+
+// when I click on a type or a category the select must have an event listener (on each select of on the options)
+// the event must call the api and filter either type or category or date and range
+
+
+// structure of the filter function
+
+// it should store or take teh current query and add or take out certain queries 

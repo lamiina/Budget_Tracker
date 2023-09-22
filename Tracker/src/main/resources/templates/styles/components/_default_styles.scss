@@ -26,10 +26,16 @@ body {
 }
 
 .overlay{
-    position: absolute;
+    position: fixed;
     background: rgba(0, 0, 0, 0.5);
     width: 100vw;
     height: 100vh;
+
     z-index: 2;
+}
+
+.stop_scroll{
+    overflow-y: hidden;
+    width: 100%;
 }
 

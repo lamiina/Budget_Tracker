@@ -15,7 +15,7 @@
         
 
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script> -->
 
         <link rel="stylesheet" href="./styles/styles.css">
 
@@ -23,52 +23,71 @@
 
     <body>
 
+        <div class="success_message hide" id="success_message">
+            <p>Transaction has been added!</p>
+        </div>
+
+
         <div class="add_transactions_popup overlay hide">
             <div class="popup_container">
-                <h2>Add Transaction</h2>
 
-                 <form >
+                <div class="top">
+                    <h2>Add Transaction</h2>
+    
+                    <button >X</button>
+                </div>
+
+                 <form id="add_transaction_form">
+                     
+                    <div class="add_filter">
+                         <label for="start_date_filter">Date:</label>
+                         <input name="date" type="date" id="start_date_filter">   
+                     </div>
+
+                     <div class="add_filter">
+                         <label for="description">Description:</label>
+                         <input name="details" type="text" id="description">   
+                     </div>
+
+                     <div class="add_filter">
+                         <label for="amount">Amount:</label>
+                         <input name="amount" type="number" id="amount">   
+                     </div>
 
                     <div class="add_filter">
                         <label for="select_category">Category:</label>
-                        <select id="select_category">
+                        <select name="category" id="select_category">
                             <option value="">All</option>
                         </select>
                     </div>
 
-                    <div class="add_filter">
-                        <label for="start_date_filter">Date:</label>
-                        <input type="date" id="start_date_filter">   
-                    </div>
 
-                    <div class="add_filter">
-                        <label for="ammount">Amount:</label>
-                        <input type="number" id="ammount">   
-                    </div>
-
-                    <div class="add_filter">
-                        <label for="description">Description:</label>
-                        <input type="text" id="description">   
-                    </div>
-
-                    <button type="button" id="add_transaction_btn">Add</button>
+                    
+                    <button type="submit" id="add_transaction_btn">Add</button>
+                    
+                    
                 </form>
+                <p class="error_text" id="error_text_transactions"></p>
             </div>
         </div>
 
          <div class="categories_popup overlay hide">
             <div class="popup_container">
-                <h2>categories</h2>
+                 <div class="top">
+                    <h2>Categories</h2>
+    
+                    <button >X</button>
+                </div>
 
                 <form>
                     <div class="add_filter">
-                        <label for="details">Name</label>
-                        <input type="text" id="details">   
+                        <label for="description">Name</label>
+                        <input name="description" type="text" id="description">   
                     </div> 
 
                     <div class="add_filter">
                         <label for="select_type">type:</label>
-                        <select id="select_type">
+                        <select name="type" id="select_type">
                             <option value="">All</option>
                             <option value="income">Income</option>
                             <option value="expense">Expense</option>
@@ -76,8 +95,9 @@
                         </select>
                     </div>
 
-                    <button>add category</button>
+                    <button type="submit">add category</button>
                 </form>
+                <p class="error_text" id="error_text_category"></p>
 
                 <div class="categories_list_container" >
                     <div class="categories_info">
@@ -99,7 +119,7 @@
 
                 <ul class="nav_ul">
                     <li class="nav_link"><a href="/">Home</a></li>
-                    <li class="nav_link"><a href="/addT">Add Transactions</a></li>
+                    <!-- <li class="nav_link"><a href="/addT">Add Transactions</a></li> -->
                     <li class="nav_link"><a href="/reports">Reports</a></li>
                 </ul>
 
@@ -112,17 +132,6 @@
     
                 
                 <h1>Budget Tracker - Transactions</h1>
-
-                <div class="buttons">
-
-                    <button>
-                        add transaction
-                    </button>
-    
-                    <button>
-                        categories
-                    </button>
-                </div>
     
                 <div class="filters">
 
@@ -169,6 +178,17 @@
                     </ul>
                 </div>
 
+                   <div class="buttons">
+
+                    <button>
+                        add transaction
+                    </button>
+    
+                    <button>
+                        categories
+                    </button>
+                </div>
+
                 <div class="pagination_container" id="pagination_container">
                     <button id="left"> < </button>
                     <ul class="pagination" id="pagination">
@@ -177,7 +197,7 @@
                     <button id="right"> > </button>
                 </div>
     
-              
+                
                  
     
             </div>

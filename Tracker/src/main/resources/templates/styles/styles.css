@@ -1,3 +1,35 @@
+@-webkit-keyframes popIN {
+  0% {
+    top: -70px;
+  }
+  100% {
+    top: 20px;
+  }
+}
+@keyframes popIN {
+  0% {
+    top: -70px;
+  }
+  100% {
+    top: 20px;
+  }
+}
+@-webkit-keyframes popOUT {
+  0% {
+    top: 20px;
+  }
+  100% {
+    top: -70px;
+  }
+}
+@keyframes popOUT {
+  0% {
+    top: 20px;
+  }
+  100% {
+    top: -70px;
+  }
+}
 * {
   box-sizing: border-box;
   margin: 0;
@@ -24,11 +56,16 @@ body {
 }
 
 .overlay {
-  position: absolute;
+  position: fixed;
   background: rgba(0, 0, 0, 0.5);
   width: 100vw;
   height: 100vh;
-  z-index: 6;
+  z-index: 2;
+}
+
+.stop_scroll {
+  overflow-y: hidden;
+  width: 100%;
 }
 
 header ul {
@@ -46,6 +83,24 @@ header ul li a {
   color: rgb(70, 146, 238);
 }
 
+.success_message {
+  position: fixed;
+  border: 3px solid #edbf6b;
+  background-color: rgb(255, 255, 255);
+  border-radius: 15px;
+  z-index: 3;
+  left: 50%;
+  top: 20px;
+  transform: translate(-50%);
+  -webkit-animation: popIN 0.4s ease-in-out;
+          animation: popIN 0.4s ease-in-out;
+}
+.success_message p {
+  white-space: nowrap;
+  padding: 1rem;
+  width: 100%;
+}
+
 .add_transactions_popup .popup_container, .categories_popup .popup_container {
   position: absolute;
   left: 50%;
@@ -56,7 +111,27 @@ header ul li a {
   background-color: #f5f5f5;
   border-radius: 10px;
 }
-.add_transactions_popup .popup_container h2, .categories_popup .popup_container h2 {
+.add_transactions_popup .popup_container .top, .categories_popup .popup_container .top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.add_transactions_popup .popup_container .top button, .categories_popup .popup_container .top button {
+  color: rgb(255, 255, 255);
+  border: none;
+  border-radius: 3px;
+  background: rgb(236, 91, 91);
+  margin-top: 1rem;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in;
+  text-transform: capitalize;
+  margin: 0 0 0.688rem 0;
+}
+.add_transactions_popup .popup_container .top button:hover, .categories_popup .popup_container .top button:hover {
+  background-color: #e01a1a;
+}
+.add_transactions_popup .popup_container .top h2, .categories_popup .popup_container .top h2 {
   font-size: 1.5rem;
   color: rgb(70, 146, 238);
   margin-bottom: 1rem;
@@ -67,6 +142,9 @@ header ul li a {
   padding: 0.5rem;
   border-radius: 3px;
   border: 1px solid #dddcdc;
+}
+.add_transactions_popup .popup_container form select, .categories_popup .popup_container form select {
+  text-transform: capitalize;
 }
 .add_transactions_popup .popup_container form button, .categories_popup .popup_container form button {
   color: rgb(255, 255, 255);
@@ -79,9 +157,18 @@ header ul li a {
   transition: background-color 0.3s ease-in;
   text-transform: capitalize;
   padding: 0.5rem 1rem;
+  width: 100%;
 }
 .add_transactions_popup .popup_container form button:hover, .categories_popup .popup_container form button:hover {
   background-color: #0867db;
+}
+.add_transactions_popup .popup_container form .error, .categories_popup .popup_container form .error {
+  outline: 1px solid rgb(255, 0, 0);
+}
+.add_transactions_popup .popup_container .error_text, .categories_popup .popup_container .error_text {
+  padding-top: 1rem;
+  color: rgb(236, 91, 91);
+  text-align: center;
 }
 .add_transactions_popup .popup_container .categories_list_container, .categories_popup .popup_container .categories_list_container {
   margin-top: 1rem;
@@ -291,6 +378,7 @@ header ul li a {
     padding: 0.5rem 1.5rem;
     margin: 0;
     align-self: flex-end;
+    width: initial;
   }
   body .categories_popup .popup_container {
     max-width: 700px;

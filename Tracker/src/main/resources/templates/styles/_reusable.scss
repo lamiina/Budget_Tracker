@@ -1,6 +1,8 @@
 $white: rgb(255, 255, 255);
 $border_color: #dddcdc;
 $button_color: rgb(55, 142, 248);
+$error_red: rgb(236, 91, 91);
+$yellow: #edbf6b;
 
 $input_border_radius: 3px;
 
@@ -15,7 +17,7 @@ $s_spacing: 1rem;
     border: none;
     border-radius: $input_border_radius;
     background: $color;
-    margin-top: 1rem;
+    margin-top: $s_spacing;
     padding: $spacing;
     cursor: pointer;
     transition: background-color 0.3s ease-in ;
@@ -57,5 +59,29 @@ $s_spacing: 1rem;
     
     &:not(:last-of-type){
         border-right: 1px solid $border_color;
+    }
+}
+
+
+@keyframes popIN {
+    0%{
+        top: -70px;
+    }
+
+
+    100%{
+        top: 20px;
+    }
+}
+
+@keyframes popOUT {
+    0%{
+        
+        top: 20px;
+    }
+
+
+    100%{
+       top: -70px;
     }
 }

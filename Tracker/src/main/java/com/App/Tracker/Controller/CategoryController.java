@@ -26,6 +26,13 @@ public class CategoryController {
         return categoryService.getCategories();
     }
 
+    @GetMapping("/filter")
+    public ResponseEntity<List<Category>> getFilteredCategories(
+            @RequestParam(name = "description", required = false) String description,
+            @RequestParam(name = "type", required = false) String type) {
+        return categoryService.filterCategories(description, type);
+    }
+
     @PostMapping
     public ResponseEntity<Category> saveCategory(@RequestBody Category category) {
         return categoryService.saveCategory(category);
@@ -38,7 +45,7 @@ public class CategoryController {
 
     @DeleteMapping(value = "{id}")
     public ResponseEntity<Category> deleteCategory(@PathVariable long id) {
-            return categoryService.deleteCategory(id);
+        return categoryService.deleteCategory(id);
 
     }
 }

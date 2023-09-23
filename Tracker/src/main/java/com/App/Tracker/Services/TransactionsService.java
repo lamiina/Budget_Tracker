@@ -55,9 +55,15 @@ public class TransactionsService {
             int page,
             int size) {
 
-        Pageable pageable =PageRequest.of(page, size, Sort.by("date").descending());;
+        Pageable pageable = PageRequest.of(page, size, Sort.by("date").descending());
 
         Specification<Transactions> spec = Specification.where(null);
+
+        // Check if any filter is applied, and if not, return all transactions
+        if (startDate == null && endDate == null && categoryName == null && type == null) {
+            Page<Transactions> allTransactions = transactionsRepo.findAll(pageable);
+            return ResponseEntity.ok(allTransactions);
+        }
 
         if (startDate != null) {
             spec = spec.and((root, query, builder) -> builder.greaterThanOrEqualTo(root.get("date"), startDate));
@@ -66,7 +72,6 @@ public class TransactionsService {
         if (endDate != null) {
             spec = spec.and((root, query, builder) -> builder.lessThanOrEqualTo(root.get("date"), endDate));
         }
-
 
         if (categoryName != null) {
             spec = spec.and((root, query, builder) -> builder.equal(root.get("category").get("description"), categoryName));
@@ -79,7 +84,9 @@ public class TransactionsService {
 
         Page<Transactions> filteredTransactions = transactionsRepo.findAll(spec, pageable);
 
-
+        if (filteredTransactions.isEmpty()) {
+            throw new NotFoundException("No transactions that match the specified filter criteria were found.");
+        }
 
         return ResponseEntity.ok(filteredTransactions);
     }

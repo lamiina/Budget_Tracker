@@ -40,6 +40,7 @@ public class CategoryService {
         return ResponseEntity.ok(cat.get());
     }
 
+
     public ResponseEntity<Category> saveCategory(Category category) {
         Optional<Category> cat = this.categoryRepo.findByDescriptionAndType(category.getDescription(), category.getType());
 
@@ -54,6 +55,26 @@ public class CategoryService {
         return new ResponseEntity<>(this.categoryRepo.save(category), HttpStatus.CREATED);
     }
 
+    public ResponseEntity<List<Category>> filterCategories(String description, String type) {
+
+        List<Category> filteredCategories;
+
+        if (description != null && type != null) {
+            filteredCategories = categoryRepo.findByDescriptionContainingAndType(description, CatType.valueOf(type));
+        } else if (description != null) {
+            filteredCategories = categoryRepo.findByDescriptionContaining(description);
+        } else if (type != null) {
+            filteredCategories = categoryRepo.findByType(CatType.valueOf(type));
+        } else {
+            filteredCategories = categoryRepo.findAll();
+        }
+
+        if (filteredCategories.isEmpty()) {
+            throw new NotFoundException("No matching categories found based on the provided criteria.");
+        }
+
+        return ResponseEntity.ok(filteredCategories);
+    }
 
     public ResponseEntity<Category> updateCategory(long id, Category category) {
         Optional<Category> foundCategory = this.categoryRepo.findById(id);

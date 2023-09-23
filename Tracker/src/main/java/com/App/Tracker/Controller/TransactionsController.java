@@ -45,7 +45,6 @@ public class TransactionsController {
     }
 
     @GetMapping("/{id}")
-
     public ResponseEntity<Transactions> getTransactionById(@PathVariable long id) {
         return this.transactionsService.getTransactionById(id);
     }

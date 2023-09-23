@@ -110,22 +110,22 @@ const deleteFromDataBase = (url, itemIdToDelete) => {
          "Content-Type": "application/json"
        },
      })
-       .then((response) => {
-         if (!response.ok) {
-           throw new Error(`Failed to delete item (status ${response.status})`)
-         }
-         return response.json() 
-       })
-       .then((data) => {
-         console.log("Item deleted successfully", data)
-       })
-       .catch((error) => {
-         console.error("Error:", error)
-       })
+    .then((response) => {
+        if (!response.ok) {
+        throw new Error(`Failed to delete item (status ${response.status})`)
+        }
+        return response.json() 
+    })
+    .then((data) => {
+        console.log("Item deleted successfully", data)
+    })
+    .catch((error) => {
+        console.error("Error:", error)
+    })
 } 
 
 
-const categoryElement = (args, func) => {
+const categoryElement = (args) => {
     const {description, type} = args
     
     const element = listElement( 
@@ -139,11 +139,36 @@ const categoryElement = (args, func) => {
 }
 
 
+// you are waiting for the backend to make filtration for categories so you can fetch exactly the one you need to delete and add it here
+
+
+// this function should add delete functionality dynamically
+const addDeleteFunctionality = (element) => {
+    const deleteIcon = document.createElement("span")
+    deleteIcon.classList.add("delete_element")
+    deleteIcon.classList.add("hide")
+
+    deleteIcon.innerHTML = `<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z"></path></svg>` 
+
+    element.appendChild(deleteIcon)
+
+    console.log(element)
+    element.addEventListener("mouseover", (e) => {
+        // const trashcan = e.currentTarget.querySelector(".delete_element")
+
+       deleteIcon.classList.remove("hide") 
+    })
+
+    element.addEventListener("mouseout", (e) => {
+        deleteIcon.classList.add("hide")
+    })
+}
+
+
 
 // Load functions
 
-
-const load = (parent,items, childTemplate) => {
+const load = (parent,items, childTemplate, deleteFunc) => {
     
     items.map((element, index) => {
         const { ...args } = element
@@ -155,6 +180,11 @@ const load = (parent,items, childTemplate) => {
           stockOption.value = ""
           parent.appendChild(stockOption)
         }
+
+        if(deleteFunc){
+            addDeleteFunctionality(child)
+        }
+
         parent.appendChild(child)
     })
 }
@@ -169,7 +199,7 @@ const loadTransactions = (parent, url, childTemplate, ifPagination) => {
     const paginatedItems = data.content
     const pages = data.totalPages
 
-    load(parent, paginatedItems, childTemplate)
+    load(parent, paginatedItems, childTemplate, true)
 
     if (ifPagination) {
       loadPagination(pages)

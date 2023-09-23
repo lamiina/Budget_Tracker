@@ -190,6 +190,7 @@ header ul li a {
   max-height: 200px;
 }
 .add_transactions_popup .popup_container .categories_list_container ul li, .categories_popup .popup_container .categories_list_container ul li {
+  position: relative;
   display: flex;
 }
 .add_transactions_popup .popup_container .categories_list_container ul li span, .categories_popup .popup_container .categories_list_container ul li span {
@@ -261,6 +262,7 @@ header ul li a {
   font-weight: 800;
 }
 .container .transactions .transactions_container li {
+  position: relative;
   display: flex;
 }
 .container .transactions .transactions_container li span {
@@ -271,6 +273,23 @@ header ul li a {
 }
 .container .transactions .transactions_container li:nth-of-type(odd) {
   background-color: #e9e9e9;
+}
+.container .transactions .transactions_container li .delete_element {
+  cursor: pointer;
+  position: absolute;
+  color: red;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  right: 0;
+  transition: transform 0.3s ease-in-out;
+  border: none;
+}
+.container .transactions .transactions_container li .delete_element:hover {
+  transform: scale(1.2);
+}
+.container .transactions .transactions_container li .delete_element svg {
+  pointer-events: none;
 }
 .container .buttons {
   display: flex;

@@ -8,13 +8,14 @@
 .success_message{
     position: fixed;
     background-color: $white;
-    border-radius: 15px;
+    border-radius: 2rem;
     z-index: 3;
     // border: 3px solid $yellow;
     left: 50%;
     top: 20px;
     transform: translate(-50%);
     animation: popIN 0.4s ease-in-out;
+    box-shadow: 0px 2px 23px -5px rgba(0,0,0,0.73);
 
     p{
         white-space: nowrap;
@@ -277,6 +278,13 @@
     // The font size makes everything appear bigger
     *{
         font-size: 16px;    
+    }
+
+    .add_transactions_popup, .categories_popup{
+    
+        .popup_container{
+            min-width: 400px;
+        }
     }
 
    .container{

@@ -118,13 +118,14 @@ header ul li a {
 .success_message {
   position: fixed;
   background-color: rgb(255, 255, 255);
-  border-radius: 15px;
+  border-radius: 2rem;
   z-index: 3;
   left: 50%;
   top: 20px;
   transform: translate(-50%);
   -webkit-animation: popIN 0.4s ease-in-out;
           animation: popIN 0.4s ease-in-out;
+  box-shadow: 0px 2px 23px -5px rgba(0, 0, 0, 0.73);
 }
 .success_message p {
   white-space: nowrap;
@@ -410,6 +411,9 @@ header ul li a {
 @media screen and (min-width: 575px) {
   * {
     font-size: 16px;
+  }
+  .add_transactions_popup .popup_container, .categories_popup .popup_container {
+    min-width: 400px;
   }
   .container h1 {
     font-size: 1.5rem;

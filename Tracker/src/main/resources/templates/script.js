@@ -34,7 +34,7 @@ const getData = async (url) => {
         return data
 
     } catch (error) {
-        
+        console.log(error)
     }
 
 }
@@ -97,6 +97,10 @@ const sendToDataBase = (url, object, load) => {
 
       if (response.status === 201) {
         load()
+      }
+
+      if(response.ok === "false"){
+        successMessage("Something went wrong!", "red")
       }
     })
     .catch((error) => {
@@ -186,16 +190,11 @@ const categoryElement = (args) => {
 }
 
 
-// you are waiting for the backend to make filtration for categories so you can fetch exactly the one you need to delete and add it here
-
-
-
-const addDeleteFunctionality = (element) => {
+const addDeleteFunctionality = (element, url) => {
     const deleteIcon = document.createElement("span")
     deleteIcon.classList.add("delete_element")
     deleteIcon.classList.add("hide")
 
-   
 
     deleteIcon.innerHTML = `<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="1rem" width="1rem" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M2.5 1a1 1 0 00-1 1v1a1 1 0 001 1H3v9a2 2 0 002 2h6a2 2 0 002-2V4h.5a1 1 0 001-1V2a1 1 0 00-1-1H10a1 1 0 00-1-1H7a1 1 0 00-1 1H2.5zm3 4a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7a.5.5 0 01.5-.5zM8 5a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7A.5.5 0 018 5zm3 .5a.5.5 0 00-1 0v7a.5.5 0 001 0v-7z" clip-rule="evenodd"></path></svg>` 
 
@@ -212,40 +211,27 @@ const addDeleteFunctionality = (element) => {
     })
 
     deleteIcon.addEventListener("click", () => {
-      const spanElements = element.querySelectorAll("span")
-      const elementDescription = spanElements[0].innerText
-      const elementType = spanElements[1].innerText.toUpperCase()
-
-      console.log(elementDescription, elementType)
-
-      getCategory(elementDescription, elementType).then((data) => {
-        data.map((item) => {
-          const { description, type, id } = item
-
-          if (
-            description.toLowerCase() === elementDescription.toLowerCase() &&
-            type.toLowerCase() === elementType.toLowerCase()
-          ) {
-            console.log(id)
-            deleteFromDataBase(categoriesURL,id, () => { 
-                loadElements(simpleBarContainer, categoriesURL, categoryElement, addDeleteFunctionality)
-                loadTransactions(transactions, paginationURL, transaction, true)
-                successMessage("Category has been deleted!", "yellow")
-            })
-          }
+        const id = element.id
+    
+        deleteFromDataBase(url ,id, () => { 
+            loadElements(simpleBarContainer, categoriesURL, categoryElement, addDeleteFunctionality)
+            loadTransactions(transactions, paginationURL, transaction, true)
+            successMessage("Item has been deleted!", "yellow")
         })
-      })
-
-
-
     })
 }
 
+const deleteEvents = (children) => {
+  for (const child of children) {
+    const clone = child.cloneNode(true)
+    child.parentNode.replaceChild(clone, child)
+  }
+}
 
 
 // Load functions
 
-const load = (parent,items, childTemplate, deleteFunc) => {
+const load = (parent,items, childTemplate, deleteFunc, url) => {
     
     items.map((element, index) => {
         const { ...args } = element
@@ -259,7 +245,7 @@ const load = (parent,items, childTemplate, deleteFunc) => {
         }
 
         if(deleteFunc){
-            deleteFunc(child)
+            deleteFunc(child, url)
         }
 
         parent.appendChild(child)
@@ -271,12 +257,17 @@ const load = (parent,items, childTemplate, deleteFunc) => {
 const loadTransactions = (parent, url, childTemplate, ifPagination) => {
 
   getData(url).then((data) => {
+
+    const elementsWithEventListeners = parent.children
+
+    deleteEvents(elementsWithEventListeners)
+
     parent.innerHTML = ""
 
     const paginatedItems = data.content
     const pages = data.totalPages
 
-    load(parent, paginatedItems, childTemplate, addDeleteFunctionality)
+    load(parent, paginatedItems, childTemplate, addDeleteFunctionality, transactionsURL)
 
     if (ifPagination) {
       loadPagination(pages)
@@ -286,12 +277,17 @@ const loadTransactions = (parent, url, childTemplate, ifPagination) => {
  
 
 const loadElements = (parent, url, childTemplate, func) => {
+
+    if(func){
+        const elementsWithEventListeners = parent.children
+        deleteEvents(elementsWithEventListeners)
+    }
     
     parent.innerHTML = ""
     getData(url).then(data => {
 
         if(Array.isArray(data)){
-            load(parent, data, childTemplate, func)
+            load(parent, data, childTemplate, func, url)
 
         } else {
             loadTransactions(parent, url, childTemplate, true)  
@@ -308,8 +304,10 @@ const pagination = document.getElementById("pagination")
 
 
 const loadPagination = (pages) => {
-
-    // you need to delete all the vent listeners from the buttons before this is deleted
+    
+    const paginationButtonElements = pagination.children
+   
+    deleteEvents(paginationButtonElements)
 
     pagination.innerHTML = ""
 
@@ -506,30 +504,21 @@ const checkIfContainsError = (e) => {
     return false
 }
 
-const postTransaction = (object) => {
-    
-    getData(categoriesURL).then((data) => {
-      data.filter((category) => {
-        const { description, type, id } = category
+const postTransaction = (object, e) => {
+    const select = e.currentTarget.querySelector("select")
+    const idFromHtml = select.options[select.selectedIndex].id
 
-        if (
-          checkIfDescriptionAndTypeMatch(description, type, object.category)
-        ) {
-          const newObj = { ...object }
+    const newObj = { ...object }
 
-          newObj.category = {
-            id: id,
-          }
+    newObj.category = {
+    id: idFromHtml,
+    }
 
-          const jsonObject = JSON.stringify(newObj)
+    const jsonObject = JSON.stringify(newObj)
 
-          sendToDataBase(transactionsURL, jsonObject)
-          loadTransactions(transactions, paginationURL, transaction, true)
-          successMessage("Transaction has been added!", "green")
-          return
-        }
-      })
-    })
+    sendToDataBase(transactionsURL, jsonObject)
+    loadTransactions(transactions, paginationURL, transaction, true)
+    successMessage("Transaction has been added!", "green")
 }
 
 const processValidation = (object, e, successFunc) => {
@@ -540,10 +529,11 @@ const processValidation = (object, e, successFunc) => {
 
   
   if (!checkIfContainsError(e)) {
+    successFunc(object, e)
+
     errorTextContainer.innerText = ""
     e.target.reset()
 
-    successFunc(object)
   }
 }
 
@@ -596,11 +586,18 @@ categoriesForm.addEventListener("submit", (e) => {
 })
 
 
-// Find out how to show loading bar while loading transactions 
+// 1
+
+// make a checkbox select functionality so you can delete multiple transactions at once
+// remember gmail example
+
+
+//2 
+
+// filter functionality
 
 // YOU SHOULD FIRST TEST OUT HOW THE QUERY WORKS FIRST
 
-// filter functionality
 
 // when I click on a type or a category the select must have an event listener (on each select of on the options)
 // the event must call the api and filter either type or category or date and range
@@ -609,3 +606,16 @@ categoriesForm.addEventListener("submit", (e) => {
 // structure of the filter function
 
 // it should store or take teh current query and add or take out certain queries 
+
+
+
+// 3
+
+// Find out how to show loading bar while loading transactions 
+
+
+// 4 
+
+// you need to make a functionality that allows you to edit categories
+
+

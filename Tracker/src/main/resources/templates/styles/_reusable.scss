@@ -86,14 +86,31 @@ $s_spacing: 1rem;
     }
 }
 
-@mixin deleteButton {
-
-
-
-        transition: background-color 0.3s ease-in-out;
-    &:hover{
-        background-color: lighten($button_color, 25%);
+@keyframes fadeIN {
+    0%{
+        opacity: 0;
     }
+
+
+    100%{
+       opacity: 1;
+    }
+}
+
+@keyframes fadeOUT {
+    0%{
+        opacity: 1;
+    }
+    
+    
+    100%{
+        opacity: 0;
+    }
+}
+
+
+
+@mixin deleteButton {
 
     .delete_element{
         padding-top: 0.7rem;
@@ -104,6 +121,7 @@ $s_spacing: 1rem;
         right: 5px;
         border: none;
         transition: transform 0.3s ease-in-out;
+        animation: fadeIN 0.4s ease-in-out;
 
         &:hover{
             transform: scale(1.2);

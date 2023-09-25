@@ -7,11 +7,10 @@
 
 .success_message{
     position: fixed;
-    border: 3px solid $yellow;
     background-color: $white;
     border-radius: 15px;
     z-index: 3;
-    
+    // border: 3px solid $yellow;
     left: 50%;
     top: 20px;
     transform: translate(-50%);
@@ -106,8 +105,13 @@
 
                 li{
                     position: relative;
-                    display: flex;
-                   
+                    display: flex; 
+                    // transition: background-color 0.3s ease-in-out;
+
+                    // &:hover{
+                    //     background-color: lighten($button_color, 25%);
+                    // }
+                            
                     span{
                         border-top: 1px solid $border_color;
 
@@ -209,7 +213,7 @@
                     overflow-wrap: break-word;
 
                     &:last-of-type{
-                        text-align: end;
+                        // text-align: end;
                         
                     }
 

@@ -56,8 +56,7 @@ const getCategory = async (description, type) => {
 
 const deleteFromDataBase = (url, itemIdToDelete, load) => {
      
-
-     fetch(`${url}/${itemIdToDelete}`, {
+    fetch(`${url}/${itemIdToDelete}`, {
        method: "DELETE",
        headers: {
          "Content-Type": "application/json"
@@ -93,7 +92,7 @@ const sendToDataBase = (url, object, load) => {
       console.log("Server response:", response)
 
       if (response.status === 500) {
-        successMessage("Category already exists!")
+        successMessage("Category already exists!", "red")
       }
 
       if (response.status === 201) {
@@ -133,7 +132,7 @@ const listElement = (content) => {
 }
 
 const filterOption = (args) => {
-    const {description} = args
+    const {description, id} = args
 
     const option = document.createElement("option")
     option.value = description
@@ -143,17 +142,18 @@ const filterOption = (args) => {
 }
 
 const filterOptionTransaction = (args) => {
-  const { description, type } = args
+  const { description, type, id } = args
 
   const option = document.createElement("option")
   option.value = `${description}-${type.toLowerCase()}`
   option.innerText = `${description}-${type.toLowerCase()}`
+  option.setAttribute("id", id)
 
   return option
 }
 
 const transaction = (args) => {
-    const {date, details, amount, category} = args
+    const {date, details, amount, category, id} = args
 
     const element = listElement(
       `
@@ -164,12 +164,14 @@ const transaction = (args) => {
     `
     )
 
+    element.setAttribute("id", id)
+
     return element
 }
 
 
 const categoryElement = (args) => {
-    const {description, type} = args
+    const {description, type, id} = args
     
     const element = listElement( 
     `
@@ -177,6 +179,8 @@ const categoryElement = (args) => {
     <span>${type.toLowerCase()}</span>
     `
     )
+
+    element.setAttribute("id", id)
   
     return element
 }
@@ -198,12 +202,13 @@ const addDeleteFunctionality = (element) => {
     element.appendChild(deleteIcon)
 
     element.addEventListener("mouseover", (e) => {
-       
-       deleteIcon.classList.remove("hide") 
+        deleteIcon.classList.remove("hide") 
+
     })
 
     element.addEventListener("mouseout", (e) => {
         deleteIcon.classList.add("hide")
+        
     })
 
     deleteIcon.addEventListener("click", () => {
@@ -223,9 +228,9 @@ const addDeleteFunctionality = (element) => {
           ) {
             console.log(id)
             deleteFromDataBase(categoriesURL,id, () => { 
-                loadElements(simpleBarContainer, categoriesURL, categoryElement)
+                loadElements(simpleBarContainer, categoriesURL, categoryElement, addDeleteFunctionality)
                 loadTransactions(transactions, paginationURL, transaction, true)
-                successMessage("Category has been deleted!")
+                successMessage("Category has been deleted!", "yellow")
             })
           }
         })
@@ -271,7 +276,7 @@ const loadTransactions = (parent, url, childTemplate, ifPagination) => {
     const paginatedItems = data.content
     const pages = data.totalPages
 
-    load(parent, paginatedItems, childTemplate)
+    load(parent, paginatedItems, childTemplate, addDeleteFunctionality)
 
     if (ifPagination) {
       loadPagination(pages)
@@ -280,13 +285,13 @@ const loadTransactions = (parent, url, childTemplate, ifPagination) => {
 }
  
 
-const loadElements = (parent, url, childTemplate) => {
+const loadElements = (parent, url, childTemplate, func) => {
     
     parent.innerHTML = ""
     getData(url).then(data => {
 
         if(Array.isArray(data)){
-            load(parent, data, childTemplate, addDeleteFunctionality)
+            load(parent, data, childTemplate, func)
 
         } else {
             loadTransactions(parent, url, childTemplate, true)  
@@ -362,8 +367,8 @@ addFunctionalityToPaginationButtons()
 // Loading when app starts
 
 loadElements(categoryFilters, categoriesURL, filterOption)
-loadElements(transactions, paginationURL, transaction)
-loadElements(simpleBarContainer, categoriesURL, categoryElement)
+loadElements(transactions, paginationURL, transaction, addDeleteFunctionality)
+loadElements(simpleBarContainer, categoriesURL, categoryElement, addDeleteFunctionality)
 
 
 
@@ -374,12 +379,18 @@ loadElements(simpleBarContainer, categoriesURL, categoryElement)
 // Function for displaying submission success for category or transaction
  const successMessageContainer = document.getElementById("success_message")
 
-const successMessage = (message) => {
+const successMessage = (message, color) => {
     successMessageContainer.innerHTML = `<p>${message}</p>`
     successMessageContainer.classList.remove("hide")
 
-    successMessageContainer.style.animationName = "popIN"
+    const colors = {
+      green: "3px solid rgb(6, 191, 6)",
+      yellow: "3px solid #edbf6b",
+      red: "3px solid rgb(233, 78, 78)",
+    }
 
+    successMessageContainer.style.animationName = "popIN"
+    successMessageContainer.style.border = colors[color]
 
     setTimeout(() => {
        
@@ -514,7 +525,7 @@ const postTransaction = (object) => {
 
           sendToDataBase(transactionsURL, jsonObject)
           loadTransactions(transactions, paginationURL, transaction, true)
-          successMessage("Transaction has been added!")
+          successMessage("Transaction has been added!", "green")
           return
         }
       })
@@ -568,9 +579,9 @@ const postCategory = (object) => {
 
   const jsonObject = JSON.stringify(formObject)
 
-  sendToDataBase(categoriesURL, jsonObject, () => {loadElements(simpleBarContainer, categoriesURL, categoryElement)})
+  sendToDataBase(categoriesURL, jsonObject, () => {loadElements(simpleBarContainer, categoriesURL, categoryElement, addDeleteFunctionality)})
  
-  successMessage("Category has been added!")
+  successMessage("Category has been added!", "green")
 }
 
 

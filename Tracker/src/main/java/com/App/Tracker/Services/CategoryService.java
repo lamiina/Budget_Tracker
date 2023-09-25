@@ -32,7 +32,7 @@ public class CategoryService {
         return ResponseEntity.ok(categoryRepo.findAll());
     }
 
-    public ResponseEntity<Category> getCategory(long id) {
+    public ResponseEntity<Category> getCategoryById(long id) {
         Optional<Category> cat = this.categoryRepo.findById(id);
         if (!cat.isPresent()) {
             throw new NotFoundException("Category with id " + id + " does not exist");

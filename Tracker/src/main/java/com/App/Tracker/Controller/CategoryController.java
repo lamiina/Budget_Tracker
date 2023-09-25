@@ -32,6 +32,10 @@ public class CategoryController {
             @RequestParam(name = "type", required = false) String type) {
         return categoryService.filterCategories(description, type);
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<Category> getCategoryById( long id){
+        return categoryService.getCategoryById(id);
+    }
 
     @PostMapping
     public ResponseEntity<Category> saveCategory(@RequestBody Category category) {

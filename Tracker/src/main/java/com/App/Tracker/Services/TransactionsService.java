@@ -38,9 +38,9 @@ public class TransactionsService {
     }
 
     public ResponseEntity<Transactions> getTransactionById(long id) {
-        Transactions transactionDTO = transactionsRepo.getById(id);
+        Transactions transaction = transactionsRepo.getById(id);
 
-        return ResponseEntity.ok(transactionDTO);
+        return ResponseEntity.ok(transaction);
     }
     public ResponseEntity<Page<Transactions>> getAllTransactionsPage(int page, int size){
         PageRequest pr = PageRequest.of(page,size);

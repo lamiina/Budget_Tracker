@@ -112,23 +112,33 @@ $s_spacing: 1rem;
 
 @mixin deleteButton {
 
-    .delete_element{
-        padding-top: 0.7rem;
-        cursor: pointer;
-        position: absolute;
-        color: red;
-        width: fit-content;
-        right: 5px;
-        border: none;
+    position: absolute;
+    align-items: center;
+    padding: 0;
+    border: none;
+    color: rgb(255, 0, 0);
+    width: fit-content;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    animation: fadeIN 0.4s ease-in-out;
+    
+    
+    
+    height: 100%;
+    
+    svg{
         transition: transform 0.3s ease-in-out;
-        animation: fadeIN 0.4s ease-in-out;
+        pointer-events: none;
+    }
 
-        &:hover{
-            transform: scale(1.2);
-        }
-
+    &:hover{
         svg{
-            pointer-events: none;
+            transform: scale(1.2);
+
         }
     }
+    
+
 }

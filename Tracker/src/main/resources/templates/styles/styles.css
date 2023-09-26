@@ -87,6 +87,10 @@ body {
   display: initial;
 }
 
+.flex {
+  display: flex;
+}
+
 .overlay {
   position: fixed;
   background: rgba(0, 0, 0, 0.5);
@@ -233,24 +237,28 @@ header ul li a {
   background-color: #e9e9e9;
 }
 .add_transactions_popup .popup_container .categories_list_container ul li .delete_element, .categories_popup .popup_container .categories_list_container ul li .delete_element {
-  padding-top: 0.7rem;
-  cursor: pointer;
   position: absolute;
-  color: red;
+  align-items: center;
+  padding: 0;
+  border: none;
+  color: rgb(255, 0, 0);
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
-  right: 5px;
-  border: none;
-  transition: transform 0.3s ease-in-out;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
   -webkit-animation: fadeIN 0.4s ease-in-out;
           animation: fadeIN 0.4s ease-in-out;
-}
-.add_transactions_popup .popup_container .categories_list_container ul li .delete_element:hover, .categories_popup .popup_container .categories_list_container ul li .delete_element:hover {
-  transform: scale(1.2);
+  height: 100%;
 }
 .add_transactions_popup .popup_container .categories_list_container ul li .delete_element svg, .categories_popup .popup_container .categories_list_container ul li .delete_element svg {
+  transition: transform 0.3s ease-in-out;
   pointer-events: none;
+}
+.add_transactions_popup .popup_container .categories_list_container ul li .delete_element:hover svg, .categories_popup .popup_container .categories_list_container ul li .delete_element:hover svg {
+  transform: scale(1.2);
 }
 
 .container {
@@ -298,8 +306,49 @@ header ul li a {
   padding: 0 0.75rem;
   background-color: rgb(228, 224, 224);
 }
+.container .selection_for_deletion {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  border: 1px solid #dddcdc;
+  border-radius: 3px 3px 0 0;
+  border-bottom: none;
+  gap: 0.5rem;
+}
+.container .selection_for_deletion .delete_element {
+  display: flex;
+  position: absolute;
+  align-items: center;
+  padding: 0;
+  border: none;
+  color: rgb(255, 0, 0);
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  -webkit-animation: fadeIN 0.4s ease-in-out;
+          animation: fadeIN 0.4s ease-in-out;
+  height: 100%;
+  position: static;
+  transform: none;
+  margin-left: auto;
+}
+.container .selection_for_deletion .delete_element svg {
+  transition: transform 0.3s ease-in-out;
+  pointer-events: none;
+}
+.container .selection_for_deletion .delete_element:hover svg {
+  transform: scale(1.2);
+}
+.container .selection_for_deletion input {
+  width: 1.2rem;
+  height: 1.2rem;
+  cursor: pointer;
+}
 .container .transactions {
-  margin-top: 1rem;
   border: 1px solid #dddcdc;
 }
 .container .transactions span {
@@ -316,35 +365,59 @@ header ul li a {
 .container .transactions .transactions_container li {
   position: relative;
   display: flex;
-  flex-wrap: wrap;
 }
 .container .transactions .transactions_container li span {
   flex: 1;
   border-top: 1px solid #dddcdc;
-  overflow-wrap: break-word;
 }
 .container .transactions .transactions_container li:nth-of-type(odd) {
   background-color: #e9e9e9;
 }
-.container .transactions .transactions_container li .delete_element {
-  padding-top: 0.7rem;
-  cursor: pointer;
+.container .transactions .transactions_container li .checkbox_container {
+  display: flex;
+  align-items: center;
   position: absolute;
-  color: red;
+  right: 0;
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
-  right: 5px;
+  height: 100%;
+  padding: 0.5rem;
+}
+.container .transactions .transactions_container li .checkbox_container input {
+  width: 1.2rem;
+  height: 1.2rem;
+  cursor: pointer;
+}
+.container .transactions .transactions_container li .delete_element {
+  position: absolute;
+  align-items: center;
+  padding: 0;
   border: none;
-  transition: transform 0.3s ease-in-out;
+  color: rgb(255, 0, 0);
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
   -webkit-animation: fadeIN 0.4s ease-in-out;
           animation: fadeIN 0.4s ease-in-out;
-}
-.container .transactions .transactions_container li .delete_element:hover {
-  transform: scale(1.2);
+  height: 100%;
 }
 .container .transactions .transactions_container li .delete_element svg {
+  transition: transform 0.3s ease-in-out;
   pointer-events: none;
+}
+.container .transactions .transactions_container li .delete_element:hover svg {
+  transform: scale(1.2);
+}
+.container .transactions .transactions_container li .hide {
+  display: none;
+}
+.container .transactions .transactions_container li .flex {
+  display: flex;
 }
 .container .buttons {
   display: flex;

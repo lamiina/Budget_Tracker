@@ -123,6 +123,40 @@ const categoriesList = document.getElementById("categories_list")
 const scrollbar = new SimpleBar(document.getElementById("categories_list"))
 const simpleBarContainer = document.body.querySelector(".simplebar-content")
 
+// Checkbox functionality
+
+// you will have to select the checkbox and delete button from the top of transactions
+
+// you have to position the bar from top of the transactions when it s on small viewport
+
+const addCheckboxFunctionality = (element) => {
+    
+    element.addEventListener("click", (e) => {
+        e.stopPropagation()
+        const transactionElements = Array.from(transactions.children)
+
+        const checkedItems = transactionElements.filter(node => input = node.querySelector("input").checked)
+
+        console.log(checkedItems)
+
+        // if checked it needs to apply a background color or something to show that
+
+        if(checkedItems.length > 0){
+            //unhide popup
+        } else {
+            // hide popup
+        }
+
+        // with checked items you can count items to be deleted and at the same time if or not to add popup
+    
+  })
+
+  // when on checkbox is selected make a pop-up appear at the bottom for phone users and for pc make it a bar that appears at the top of transactions
+
+  // when no checkboxes selected make it disappear
+
+  // the popup contains a delete button and a counter that shows how many items selected you have
+}
 
 
 // Template functions for loading certain elements
@@ -165,8 +199,14 @@ const transaction = (args) => {
     <span>${details}</span>
     <span>${category.description}</span>
     <span>$ ${amount}</span>
+    <div class="checkbox_container"><input type="checkbox" name="check_for_deletion"></div>
     `
     )
+
+    const checkbox = element.querySelector("input")
+
+
+    addCheckboxFunctionality(checkbox)
 
     element.setAttribute("id", id)
 
@@ -190,8 +230,10 @@ const categoryElement = (args) => {
 }
 
 
+
+
 const addDeleteFunctionality = (element, url) => {
-    const deleteIcon = document.createElement("span")
+    const deleteIcon = document.createElement("div")
     deleteIcon.classList.add("delete_element")
     deleteIcon.classList.add("hide")
 
@@ -202,11 +244,13 @@ const addDeleteFunctionality = (element, url) => {
 
     element.addEventListener("mouseover", (e) => {
         deleteIcon.classList.remove("hide") 
+        deleteIcon.classList.add("flex")
 
     })
 
     element.addEventListener("mouseout", (e) => {
         deleteIcon.classList.add("hide")
+        deleteIcon.classList.remove("flex")
         
     })
 
@@ -569,7 +613,11 @@ const postCategory = (object) => {
 
   const jsonObject = JSON.stringify(formObject)
 
-  sendToDataBase(categoriesURL, jsonObject, () => {loadElements(simpleBarContainer, categoriesURL, categoryElement, addDeleteFunctionality)})
+  sendToDataBase(categoriesURL, jsonObject, () => {
+    loadElements(simpleBarContainer, categoriesURL, categoryElement, addDeleteFunctionality)
+    loadElements(selectCategoryContainer, categoriesURL, filterOptionTransaction)
+})
+  
  
   successMessage("Category has been added!", "green")
 }
@@ -619,3 +667,7 @@ categoriesForm.addEventListener("submit", (e) => {
 // you need to make a functionality that allows you to edit categories
 
 
+// 5 
+
+// when item is deleted pagination should load the page you are in
+// you can make it in such a way that only at aa certain viewport you can actually hover

@@ -4,7 +4,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-size: 9px;
+    font-size: 10px;
 }
 
 body {
@@ -43,3 +43,6 @@ body {
     width: 100%;
 }
 
+.selected {
+    color: $button_color;
+}

@@ -190,13 +190,26 @@
 
 
     .selection_for_deletion{
-        display: flex;
+        // display: none;
         align-items: center;
-        padding: 0.5rem;
-        border:  1px solid $border_color;
+        gap: 2rem;
+
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        z-index: 2;
+
+        background-color: $white;
+        height: 4rem;
+        padding: 0.5rem 1rem;
+        
+        border: 1px solid $border_color;
         border-radius: $input_border_radius $input_border_radius 0 0 ;
         border-bottom: none;
-        gap: 0.5rem;
+
+     
+      
 
         
         .delete_element{
@@ -204,11 +217,19 @@
             @include deleteButton;
             position: static;
             transform: none;
-            margin-left: auto;
+            background-color: $white;
 
         }
 
+        .close_selection_for_deletion{
+            margin-left: auto;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
         input{
+            display: none;
             width: 1.2rem;
             height: 1.2rem;
             cursor: pointer;
@@ -228,6 +249,7 @@
         .transaction_info{
             display: flex;
             font-weight: 800;
+            background-color: $white;
         }
 
         .transactions_container{
@@ -250,15 +272,21 @@
                 &:nth-of-type(odd){
                     background-color: #e9e9e9;
                 }
+                
+                &:nth-of-type(even){
+                    background-color: $white;
+                }
 
                 .checkbox_container{
                     display: flex;
                     align-items: center;
+                    justify-content: flex-end;
                     position: absolute;
                     right: 0;
-                    width: fit-content;
+                    width: 100%;
                     height: 100%;
                     padding: 0.5rem;
+                    cursor: pointer;
 
                     input{
                         width: 1.2rem;
@@ -426,6 +454,29 @@
     .container{
         .filters{
             gap: $s_spacing;
+        }
+
+        .selection_for_deletion{
+            display: flex;
+            position:static;
+            height: initial;
+            padding: 0.5rem;
+            gap: 0.5rem;
+          
+        
+            .delete_element{
+                margin-left: auto;
+                background-color: initial;
+            }
+
+            .close_selection_for_deletion{
+                display: none;
+            }
+
+            input{
+                // input must be displayed in the next viewport
+                display: initial;
+            }
         }
     }
 }

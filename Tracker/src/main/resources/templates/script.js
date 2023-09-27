@@ -67,7 +67,7 @@ const deleteFromDataBase = (url, itemIdToDelete, load) => {
         throw new Error(`Failed to delete item (status ${response.status})`)
         }
 
-        if(response.status === 204){
+        if(response.status === 204 && load){
             load()
         }
     })
@@ -129,34 +129,106 @@ const simpleBarContainer = document.body.querySelector(".simplebar-content")
 
 // you have to position the bar from top of the transactions when it s on small viewport
 
+const selectionForDeletionContainer = document.body.querySelector(".selection_for_deletion")
+const countForDeletion = document.getElementById("count_for_deletion")
+
+const highlightSelectedTransactions = () => {
+    const transactionElements = Array.from(transactions.children)
+
+    
+    const checkedItems = transactionElements.filter((node) => {
+        if (node.querySelector("input").checked) {
+            node.classList.add("selected")
+            
+            return node
+        } else {
+            node.classList.remove("selected")
+        }
+    })
+
+    countForDeletion.innerText = checkedItems.length
+
+    return checkedItems
+}
+
 const addCheckboxFunctionality = (element) => {
     
     element.addEventListener("click", (e) => {
         e.stopPropagation()
-        const transactionElements = Array.from(transactions.children)
 
-        const checkedItems = transactionElements.filter(node => input = node.querySelector("input").checked)
+
+        const checkedItems = highlightSelectedTransactions()
+       
 
         console.log(checkedItems)
 
-        // if checked it needs to apply a background color or something to show that
 
         if(checkedItems.length > 0){
-            //unhide popup
+            selectionForDeletionContainer.classList.add("flex")
         } else {
-            // hide popup
+            selectionForDeletionContainer.classList.remove("flex")
         }
-
-        // with checked items you can count items to be deleted and at the same time if or not to add popup
     
   })
-
-  // when on checkbox is selected make a pop-up appear at the bottom for phone users and for pc make it a bar that appears at the top of transactions
-
-  // when no checkboxes selected make it disappear
-
-  // the popup contains a delete button and a counter that shows how many items selected you have
 }
+
+const closeSelectionForDeletion = document.querySelector(".close_selection_for_deletion")
+
+closeSelectionForDeletion.addEventListener("click", () => {
+    selectionForDeletionContainer.classList.remove("flex")
+
+    highlightSelectedTransactions().map(node =>{
+        node.querySelector("input").checked = false
+        node.classList.remove("selected")
+    })
+})
+
+const selectAllCurrentTransactions = document.querySelector("[name=select_all_transactions]")
+
+selectAllCurrentTransactions.addEventListener("click", e => {
+    const transactionElements = Array.from(transactions.children)
+
+    if(e.target.checked){
+        countForDeletion.innerText = transactionElements.length
+        selectionForDeletionContainer.classList.add("flex")
+
+        transactionElements.map(node => {
+            node.querySelector("input").checked = true
+            node.classList.add("selected")
+        }) 
+    } else {
+        countForDeletion.innerText = 0
+        selectionForDeletionContainer.classList.remove("flex")
+
+        transactionElements.map((node) => {
+            node.querySelector("input").checked = false
+            node.classList.remove("selected")
+        }) 
+    }
+})
+
+const deleteSelectedItemsButton = document.body.querySelector(".delete_element")
+
+const deleteSelectedItems = async () => {
+  const checkedItems = highlightSelectedTransactions()
+
+  const deleteItems = checkedItems.map((node) => {
+    const { id } = node
+
+    deleteFromDataBase(transactionsURL, id)
+  })
+
+  await Promise.all(deleteItems)
+
+  loadTransactions(transactions, paginationURL, transaction, true)
+  successMessage("Items have been deleted!", "yellow")
+  selectionForDeletionContainer.classList.remove("flex")
+}
+
+
+deleteSelectedItemsButton.addEventListener("click", e => {
+    deleteSelectedItems()
+})
 
 
 // Template functions for loading certain elements
@@ -199,7 +271,7 @@ const transaction = (args) => {
     <span>${details}</span>
     <span>${category.description}</span>
     <span>$ ${amount}</span>
-    <div class="checkbox_container"><input type="checkbox" name="check_for_deletion"></div>
+    <label class="checkbox_container"><input type="checkbox" name="check_for_deletion"></label>
     `
     )
 
@@ -261,6 +333,7 @@ const addDeleteFunctionality = (element, url) => {
             loadElements(simpleBarContainer, categoriesURL, categoryElement, addDeleteFunctionality)
             loadTransactions(transactions, paginationURL, transaction, true)
             successMessage("Item has been deleted!", "yellow")
+            selectionForDeletionContainer.classList.remove("flex")
         })
     })
 }
@@ -671,3 +744,4 @@ categoriesForm.addEventListener("submit", (e) => {
 
 // when item is deleted pagination should load the page you are in
 // you can make it in such a way that only at aa certain viewport you can actually hover
+// if you add things to fast you can break the message animation

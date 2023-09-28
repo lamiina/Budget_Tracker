@@ -241,12 +241,15 @@ const listElement = (content) => {
     return listElement
 }
 
-const filterOption = (args) => {
+const filterOption = (args,) => {
     const {description, id} = args
 
     const option = document.createElement("option")
     option.value = description
     option.innerText = description
+
+
+
 
    return option
 }
@@ -689,6 +692,7 @@ const postCategory = (object) => {
   sendToDataBase(categoriesURL, jsonObject, () => {
     loadElements(simpleBarContainer, categoriesURL, categoryElement, addDeleteFunctionality)
     loadElements(selectCategoryContainer, categoriesURL, filterOptionTransaction)
+    loadElements(categoryFilters, categoriesURL, filterOption)
 })
   
  
@@ -707,12 +711,9 @@ categoriesForm.addEventListener("submit", (e) => {
 })
 
 
-// 1
+//http://localhost:8080/transactions/filter?startDate=2023-08-01&endDate=2023-08-31&category=Food&categoryType=EXPENSE&page=0&size=10
 
-// make a checkbox select functionality so you can delete multiple transactions at once
-// remember gmail example
-
-
+// http://localhost:8080/transactions/filter?categoryType=EXPENSE&page=0&size=10
 //2 
 
 // filter functionality
@@ -727,6 +728,54 @@ categoriesForm.addEventListener("submit", (e) => {
 // structure of the filter function
 
 // it should store or take teh current query and add or take out certain queries 
+
+
+// Type filter
+
+
+// When I click on a type, a query should fetch for me all the transactions with that type
+
+// the function must display transactions and load the pagination for it
+
+const filterContainer = document.body.querySelector(".filters")
+const allInputsAndSelects = filterContainer.querySelectorAll("input, select")
+const filters = Array.from(allInputsAndSelects)
+
+
+const handleFilters = () => {
+
+
+    filters.map(filter => console.log(filter.value))
+
+    // I need to grab all inputs for filters
+
+    // loop through them 
+
+    // if input not empty grab value
+
+    // bundle them all in a fetch query
+
+
+}
+
+filters.map(input => {
+    input.addEventListener("change", (e) => {
+      handleFilters()
+    })
+})
+
+
+
+// for the filters you can add to each an event listener of change to take the selected value and trigger the handle filter function
+
+
+// FILTER LOADING
+
+// when page is loaded for the first time category should contain all categories
+
+// when type is selected only the categories with that type should be loaded in category
+
+
 
 
 

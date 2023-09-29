@@ -112,7 +112,7 @@ const sendToDataBase = (url, object, load) => {
 
                     // Loading application functionality
 
-const categoryFilters = document.getElementById("category_filter")
+const categoryFilters = document.getElementById("category")
 const transactions = document.body.querySelector(".transactions_container")
 const categoriesList = document.getElementById("categories_list")
 
@@ -718,62 +718,72 @@ categoriesForm.addEventListener("submit", (e) => {
 
 // filter functionality
 
-// YOU SHOULD FIRST TEST OUT HOW THE QUERY WORKS FIRST
-
-
-// when I click on a type or a category the select must have an event listener (on each select of on the options)
-// the event must call the api and filter either type or category or date and range
-
-
-// structure of the filter function
-
-// it should store or take teh current query and add or take out certain queries 
-
-
-// Type filter
-
-
-// When I click on a type, a query should fetch for me all the transactions with that type
-
-// the function must display transactions and load the pagination for it
-
 const filterContainer = document.body.querySelector(".filters")
 const allInputsAndSelects = filterContainer.querySelectorAll("input, select")
 const filters = Array.from(allInputsAndSelects)
 
+const generateFilterQuery = (query, inputValues) => {
+    const finalQuery = Object.entries(inputValues).reduce(
+      (accumulator, [key, value]) => {
+      
+        return accumulator + `${key}=${value}&`
+      },
+      query
+    )
+
+    return finalQuery
+}
 
 const handleFilters = () => {
 
+    const inputValues = filters.reduce((accumulator, currentItem) => {
+        const { value, id } = currentItem
 
-    filters.map(filter => console.log(filter.value))
+        if(value.length > 0){
 
-    // I need to grab all inputs for filters
+            if (id === "categoryType") {
+              accumulator[id] = value.toUpperCase()
+            } else {
+              accumulator[id] = value
+            }
+        }    
+            
+        return accumulator
+    }, {})
 
-    // loop through them 
+   
+    const query = `http://localhost:8080/transactions/filter?`
 
-    // if input not empty grab value
+    generateFilterQuery(query, inputValues)
 
-    // bundle them all in a fetch query
+    // NEXT STEPS 
+    
+    // fetch the data 
 
+    // load the transactions plus pagination
 
 }
-
-filters.map(input => {
-    input.addEventListener("change", (e) => {
-      handleFilters()
-    })
-})
-
-
-
-// for the filters you can add to each an event listener of change to take the selected value and trigger the handle filter function
-
 
 // FILTER LOADING
 
 // when page is loaded for the first time category should contain all categories
 
 // when type is selected only the categories with that type should be loaded in category
+
+
+filters.map(input => {
+    input.addEventListener("change", () => {
+
+    handleFilters()
+    })
+})
+
+
+
+
+
+
+
 
 
 

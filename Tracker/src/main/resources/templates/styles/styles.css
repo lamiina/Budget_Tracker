@@ -501,6 +501,9 @@ header ul li a {
 .container .pagination_container .current_page {
   background-color: rgb(55, 142, 248);
 }
+.container .hide {
+  display: none;
+}
 
 @media screen and (min-width: 575px) {
   * {

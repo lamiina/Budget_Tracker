@@ -27,6 +27,18 @@ const getData = async (url) => {
 
     try {
         const response = await fetch(url)
+
+           if (!response.ok) {
+                if (response.status === 404) {
+                    console.log("Resource not found (404)")
+                
+                } else {
+                    console.error(`Server returned status: ${response.status}`)
+                
+                }
+                
+                return null 
+            }
         const data = await response.json()
 
         // console.log(data)
@@ -115,6 +127,7 @@ const sendToDataBase = (url, object, load) => {
 const categoryFilters = document.getElementById("category")
 const transactions = document.body.querySelector(".transactions_container")
 const categoriesList = document.getElementById("categories_list")
+const transactionsMainContainer = document.body.querySelector(".transactions")
 
 
 // Scroll functionality for categories - IMPORTANT!!! 
@@ -376,23 +389,39 @@ const load = (parent,items, childTemplate, deleteFunc, url) => {
 
 const loadTransactions = (parent, url, childTemplate, ifPagination) => {
 
-  getData(url).then((data) => {
-
     const elementsWithEventListeners = parent.children
 
     deleteEvents(elementsWithEventListeners)
 
     parent.innerHTML = ""
 
-    const paginatedItems = data.content
-    const pages = data.totalPages
+  getData(url).then((data) => {
 
-    load(parent, paginatedItems, childTemplate, addDeleteFunctionality, transactionsURL)
+    
+    if(data === null){
 
-    if (ifPagination) {
-      loadPagination(pages)
+      transactionsMainContainer.classList.add("hide")
+      paginationContainer.classList.add("hide")
+
+      // ADD A MESSAGE FOR TRANSACTIONS NOT FOUND
+    
+    } else {
+        transactionsMainContainer.classList.remove("hide")
+        paginationContainer.classList.remove("hide")
+
+        // REMOVE THE MESSAGE
+    
+        const paginatedItems = data.content
+        const pages = data.totalPages
+    
+        load(parent, paginatedItems, childTemplate, addDeleteFunctionality, transactionsURL)
+    
+        if (ifPagination) {
+          loadPagination(pages, url)
+        }
     }
-  })
+
+  }).catch(error => console.log(error))
 }
  
 
@@ -412,7 +441,7 @@ const loadElements = (parent, url, childTemplate, func) => {
         } else {
             loadTransactions(parent, url, childTemplate, true)  
         }
-    })
+    }).catch(error => console.log(error))
 
 }
 
@@ -423,7 +452,7 @@ const paginationContainer = document.getElementById("pagination_container")
 const pagination = document.getElementById("pagination")
 
 
-const loadPagination = (pages) => {
+const loadPagination = (pages, url = "http://localhost:8080/transactions/paged?") => {
     
     const paginationButtonElements = pagination.children
    
@@ -440,7 +469,7 @@ const loadPagination = (pages) => {
 
 
         paginationElement.addEventListener("click", (e) => {
-            const paginationURL = `http://localhost:8080/transactions/paged?page=${i}`
+            const paginationURL = `${url}page=${i}`
             loadTransactions(transactions, paginationURL, transaction)
 
             const currentSelectedPage = pagination.querySelector(".current_page")
@@ -523,6 +552,75 @@ const successMessage = (message, color) => {
     }, 3000)
 
 }
+
+                                    // filter functionality
+
+const filterContainer = document.body.querySelector(".filters")
+const allInputsAndSelects = filterContainer.querySelectorAll("input, select")
+const filters = Array.from(allInputsAndSelects)
+
+const generateFilterQuery = (query, inputValues) => {
+    const finalQuery = Object.entries(inputValues).reduce(
+      (accumulator, [key, value]) => {
+      
+        return accumulator + `${key}=${value}&`
+    },query)
+
+    return finalQuery
+}
+
+const handleFilters = async () => {
+  const inputValues = filters.reduce((accumulator, currentItem) => {
+    const { value, id } = currentItem
+
+    if (value.length > 0) {
+      if (id === "categoryType") {
+        accumulator[id] = value.toUpperCase()
+      } else {
+        accumulator[id] = value
+      }
+    }
+
+    return accumulator
+  }, {})
+
+  const query = `http://localhost:8080/transactions/filter?`
+
+  const finalQuery = generateFilterQuery(query, inputValues)
+
+  const lengthOfQuery = Object.entries(inputValues).length
+
+
+  if(lengthOfQuery > 0){
+      loadTransactions(transactions, finalQuery, transaction, true)
+
+  } else {
+    loadElements(
+      transactions,
+      paginationURL,
+      transaction,
+      addDeleteFunctionality
+    )
+  }
+
+}
+
+
+
+filters.map(input => {
+    input.addEventListener("change", (e) => {
+        const {id, value} = e.target
+        handleFilters()
+        
+        if (id === "categoryType" && value.length > 0) {
+            const url = `${categoriesURL}/filter?type=${value.toUpperCase()}` 
+            
+            loadElements(categoryFilters, url, filterOption)
+        }
+    
+    })
+})
+
 
 
                                         // Add transaction functionality
@@ -654,6 +752,10 @@ const processValidation = (object, e, successFunc) => {
     errorTextContainer.innerText = ""
     e.target.reset()
 
+    filters.map(input => {
+        input.value = ''
+    })
+
   }
 }
 
@@ -684,19 +786,19 @@ popupFunctionality(categoriesTrigger, closeCategories, categoriesPopup)
 
 const postCategory = (object) => {
 
-  const formObject = {...object}
-  formObject.type = object.type.toUpperCase()
+    const formObject = {...object}
+    formObject.type = object.type.toUpperCase()
 
-  const jsonObject = JSON.stringify(formObject)
+    const jsonObject = JSON.stringify(formObject)
 
-  sendToDataBase(categoriesURL, jsonObject, () => {
-    loadElements(simpleBarContainer, categoriesURL, categoryElement, addDeleteFunctionality)
-    loadElements(selectCategoryContainer, categoriesURL, filterOptionTransaction)
-    loadElements(categoryFilters, categoriesURL, filterOption)
-})
+    sendToDataBase(categoriesURL, jsonObject, () => {
+        loadElements(simpleBarContainer, categoriesURL, categoryElement, addDeleteFunctionality)
+        loadElements(selectCategoryContainer, categoriesURL, filterOptionTransaction)
+        loadElements(categoryFilters, categoriesURL, filterOption)
+    })
   
  
-  successMessage("Category has been added!", "green")
+    successMessage("Category has been added!", "green")
 }
 
 
@@ -711,80 +813,14 @@ categoriesForm.addEventListener("submit", (e) => {
 })
 
 
-//http://localhost:8080/transactions/filter?startDate=2023-08-01&endDate=2023-08-31&category=Food&categoryType=EXPENSE&page=0&size=10
 
-// http://localhost:8080/transactions/filter?categoryType=EXPENSE&page=0&size=10
-//2 
+// 2
 
-// filter functionality
+//line 406 you need to add message in transactions for no transactions found
 
-const filterContainer = document.body.querySelector(".filters")
-const allInputsAndSelects = filterContainer.querySelectorAll("input, select")
-const filters = Array.from(allInputsAndSelects)
+// might need to add message in transactions also for no categories available add one
 
-const generateFilterQuery = (query, inputValues) => {
-    const finalQuery = Object.entries(inputValues).reduce(
-      (accumulator, [key, value]) => {
-      
-        return accumulator + `${key}=${value}&`
-      },
-      query
-    )
-
-    return finalQuery
-}
-
-const handleFilters = () => {
-
-    const inputValues = filters.reduce((accumulator, currentItem) => {
-        const { value, id } = currentItem
-
-        if(value.length > 0){
-
-            if (id === "categoryType") {
-              accumulator[id] = value.toUpperCase()
-            } else {
-              accumulator[id] = value
-            }
-        }    
-            
-        return accumulator
-    }, {})
-
-   
-    const query = `http://localhost:8080/transactions/filter?`
-
-    generateFilterQuery(query, inputValues)
-
-    // NEXT STEPS 
-    
-    // fetch the data 
-
-    // load the transactions plus pagination
-
-}
-
-// FILTER LOADING
-
-// when page is loaded for the first time category should contain all categories
-
-// when type is selected only the categories with that type should be loaded in category
-
-
-filters.map(input => {
-    input.addEventListener("change", () => {
-
-    handleFilters()
-    })
-})
-
-
-
-
-
-
-
-
+// also when there are no categories, add transaction should ask you to add category first
 
 
 

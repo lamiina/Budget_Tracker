@@ -22,6 +22,7 @@
     </head>
 
     <body>
+        
 
         <div class="success_message hide" id="success_message">
             <p>Transaction has been added!</p>
@@ -136,8 +137,8 @@
                 <div class="filters">
 
                     <div class="filter_container">
-                        <label for="type_filter">Type:</label>
-                        <select class="form_control" id="type_filter">
+                        <label for="categoryType">Type:</label>
+                        <select class="form_control" id="categoryType">
                             <option value="">All</option>
                             <option value="income">Income</option>
                             <option value="expense">Expense</option>
@@ -146,20 +147,20 @@
                     </div>
 
                     <div class="filter_container">
-                        <label for="category_filter">Category:</label>
-                        <select class="form_control" id="category_filter">
+                        <label for="category">Category:</label>
+                        <select class="form_control" id="category">
                             <option value="">All</option>
                         </select>
                     </div>
 
                     <div class="filter_container">
-                        <label for="start_date_filter">Date Range:</label>
+                        <label for="startDate">Date Range:</label>
                         <div class="input_group">
-                            <input type="date" class="form_control" id="start_date_filter">
+                            <input type="date" class="form_control" id="startDate">
                             
                                 <span class="input_group_text">to</span> 
                             
-                            <input type="date" class="form_control" id="end_date_filter">
+                            <input type="date" class="form_control" id="endDate">
                         </div>
                     </div>
 
@@ -174,6 +175,13 @@
                     <button>
                         categories
                     </button>
+                </div>
+
+                <div class="selection_for_deletion hide">
+                    <span>Selected: <span id="count_for_deletion">0</span> </span>
+                    <button class="delete_element"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="1rem" width="1rem" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M2.5 1a1 1 0 00-1 1v1a1 1 0 001 1H3v9a2 2 0 002 2h6a2 2 0 002-2V4h.5a1 1 0 001-1V2a1 1 0 00-1-1H10a1 1 0 00-1-1H7a1 1 0 00-1 1H2.5zm3 4a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7a.5.5 0 01.5-.5zM8 5a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7A.5.5 0 018 5zm3 .5a.5.5 0 00-1 0v7a.5.5 0 001 0v-7z" clip-rule="evenodd"></path></svg></button>
+                    <input name="select_all_transactions" type="checkbox">
+                    <button class="close_selection_for_deletion"><svg stroke="currentColor" fill="none" stroke-width="1" viewBox="0 0 24 24" height="1.2rem" width="1.2rem" xmlns="http://www.w3.org/2000/svg"><path d="M6.2253 4.81108C5.83477 4.42056 5.20161 4.42056 4.81108 4.81108C4.42056 5.20161 4.42056 5.83477 4.81108 6.2253L10.5858 12L4.81114 17.7747C4.42062 18.1652 4.42062 18.7984 4.81114 19.1889C5.20167 19.5794 5.83483 19.5794 6.22535 19.1889L12 13.4142L17.7747 19.1889C18.1652 19.5794 18.7984 19.5794 19.1889 19.1889C19.5794 18.7984 19.5794 18.1652 19.1889 17.7747L13.4142 12L19.189 6.2253C19.5795 5.83477 19.5795 5.20161 19.189 4.81108C18.7985 4.42056 18.1653 4.42056 17.7748 4.81108L12 10.5858L6.2253 4.81108Z" fill="currentColor"></path></svg></button>
                 </div>
     
                 <div class="transactions">
@@ -192,11 +200,11 @@
               
 
                 <div class="pagination_container" id="pagination_container">
-                    <button id="left"> < </button>
+                    <button id="left"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M134.059 296H436c6.627 0 12-5.373 12-12v-56c0-6.627-5.373-12-12-12H134.059v-46.059c0-21.382-25.851-32.09-40.971-16.971L7.029 239.029c-9.373 9.373-9.373 24.569 0 33.941l86.059 86.059c15.119 15.119 40.971 4.411 40.971-16.971V296z"></path></svg> </button>
                     <ul class="pagination" id="pagination">
     
                     </ul>
-                    <button id="right"> > </button>
+                    <button id="right"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M313.941 216H12c-6.627 0-12 5.373-12 12v56c0 6.627 5.373 12 12 12h301.941v46.059c0 21.382 25.851 32.09 40.971 16.971l86.059-86.059c9.373-9.373 9.373-24.569 0-33.941l-86.059-86.059c-15.119-15.119-40.971-4.411-40.971 16.971V216z"></path></svg> </button>
                 </div>
     
                 
@@ -204,6 +212,8 @@
     
             </div>
         </section>
+
+       
     </body>
      <script src="script.js"></script>
 </html>

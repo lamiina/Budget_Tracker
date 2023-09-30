@@ -8,13 +8,14 @@
 .success_message{
     position: fixed;
     background-color: $white;
-    border-radius: 15px;
+    border-radius: 2rem;
     z-index: 3;
     // border: 3px solid $yellow;
     left: 50%;
     top: 20px;
     transform: translate(-50%);
     animation: popIN 0.4s ease-in-out;
+    box-shadow: 0px 2px 23px -5px rgba(0,0,0,0.73);
 
     p{
         white-space: nowrap;
@@ -106,6 +107,7 @@
                 li{
                     position: relative;
                     display: flex; 
+                  
                     // transition: background-color 0.3s ease-in-out;
 
                     // &:hover{
@@ -123,7 +125,9 @@
                         
                     }
 
-                    @include deleteButton;
+                    .delete_element{
+                        @include deleteButton;
+                    }
 
                 }
             }
@@ -185,10 +189,57 @@
     }
 
 
+    .selection_for_deletion{
+        // display: none;
+        align-items: center;
+        gap: 2rem;
+
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        z-index: 2;
+
+        background-color: $white;
+        height: 4rem;
+        padding: 0.5rem 1rem;
+        
+        border: 1px solid $border_color;
+        border-radius: $input_border_radius $input_border_radius 0 0 ;
+        border-bottom: none;
+
+     
+      
+
+        
+        .delete_element{
+            display: flex;
+            @include deleteButton;
+            position: static;
+            transform: none;
+            background-color: $white;
+
+        }
+
+        .close_selection_for_deletion{
+            margin-left: auto;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        input{
+            display: none;
+            width: 1.2rem;
+            height: 1.2rem;
+            cursor: pointer;
+        }
+    }
+
     // Transactions
 
     .transactions{
-        margin-top: $s_spacing;
+       
         border:  1px solid $border_color;
 
           span{
@@ -198,19 +249,18 @@
         .transaction_info{
             display: flex;
             font-weight: 800;
+            background-color: $white;
         }
 
         .transactions_container{
             li{
                 position: relative;
                 display: flex;
-                flex-wrap: wrap;
+               
 
                 span{
                     flex: 1;
                     border-top: 1px solid $border_color;
-                    // word-wrap: break-word;
-                    overflow-wrap: break-word;
 
                     &:last-of-type{
                         // text-align: end;
@@ -219,12 +269,46 @@
 
                 }
 
-                 &:nth-of-type(odd){
+                &:nth-of-type(odd){
                     background-color: #e9e9e9;
                 }
+                
+                &:nth-of-type(even){
+                    background-color: $white;
+                }
 
-                @include deleteButton;
+                .checkbox_container{
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-end;
+                    position: absolute;
+                    right: 0;
+                    width: 100%;
+                    height: 100%;
+                    padding: 0.5rem;
+                    cursor: pointer;
+
+                    input{
+                        width: 1.2rem;
+                        height: 1.2rem;
+                        cursor: pointer;
+                    }
+                }
+
+                .delete_element{
+                    @include deleteButton;
+
+                }
+                
+                .hide{
+                    display: none;
+                }
+
+                .flex{
+                    display: flex;
+                }
             }
+            
         }
     }
 
@@ -267,6 +351,10 @@
             background-color: $button_color
         }
     }
+
+    .hide{
+        display: none;
+    }
    
 
 }
@@ -277,6 +365,13 @@
     // The font size makes everything appear bigger
     *{
         font-size: 16px;    
+    }
+
+    .add_transactions_popup, .categories_popup{
+    
+        .popup_container{
+            min-width: 400px;
+        }
     }
 
    .container{
@@ -363,6 +458,29 @@
     .container{
         .filters{
             gap: $s_spacing;
+        }
+
+        .selection_for_deletion{
+            display: flex;
+            position:static;
+            height: initial;
+            padding: 0.5rem;
+            gap: 0.5rem;
+          
+        
+            .delete_element{
+                margin-left: auto;
+                background-color: initial;
+            }
+
+            .close_selection_for_deletion{
+                display: none;
+            }
+
+            input{
+                // input must be displayed in the next viewport
+                display: initial;
+            }
         }
     }
 }

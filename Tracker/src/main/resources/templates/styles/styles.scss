@@ -352,7 +352,16 @@
         }
     }
 
-    .hide{
+
+    .filter_message{
+        margin-top: 2rem;
+        h2{
+            font-size: 2.5rem;
+            text-align: center;
+        }
+    }
+
+    .hide_2{
         display: none;
     }
    
@@ -481,6 +490,11 @@
                 // input must be displayed in the next viewport
                 display: initial;
             }
+        }
+
+        .hide_2{
+            display: none;
+        
         }
     }
 }

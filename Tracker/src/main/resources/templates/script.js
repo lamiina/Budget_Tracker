@@ -21,7 +21,7 @@
 
 const categoriesURL = "http://localhost:8080/categories"
 const transactionsURL = "http://localhost:8080/transactions"
-const paginationURL = "http://localhost:8080/transactions/paged?page=0"
+const paginationURL = "http://localhost:8080/transactions/paged?"
 
 const getData = async (url) => {
 
@@ -39,10 +39,9 @@ const getData = async (url) => {
                 
                 return null 
             }
+            
         const data = await response.json()
-
-        // console.log(data)
-
+       
         return data
 
     } catch (error) {
@@ -107,7 +106,7 @@ const sendToDataBase = (url, object, load) => {
         successMessage("Category already exists!", "red")
       }
 
-      if (response.status === 201) {
+      if (response.status === 201 || response.status === 200) {
         load()
       }
 
@@ -231,11 +230,16 @@ const deleteSelectedItems = async () => {
     deleteFromDataBase(transactionsURL, id)
   })
 
-  await Promise.all(deleteItems)
+  const deletion = Promise.all(deleteItems)
 
-  loadTransactions(transactions, paginationURL, transaction, true)
-  successMessage("Items have been deleted!", "yellow")
-  selectionForDeletionContainer.classList.remove("flex")
+  deletion.then(notUsed => {
+
+      loadTransactions(transactions, paginationURL, transaction, true)
+      successMessage("Items have been deleted!", "yellow")
+      selectionForDeletionContainer.classList.remove("flex")
+  })
+
+
 }
 
 
@@ -254,14 +258,12 @@ const listElement = (content) => {
     return listElement
 }
 
-const filterOption = (args,) => {
-    const {description, id} = args
+const filterOption = (args) => {
+    const {description} = args
 
     const option = document.createElement("option")
     option.value = description
     option.innerText = description
-
-
 
 
    return option
@@ -364,9 +366,40 @@ const deleteEvents = (children) => {
 
 // Load functions
 
+const loadTransactionMessage = (state) => {
+  if (state) {
+    selectionForDeletionContainer.classList.add("hide_2")
+    transactionsMainContainer.classList.add("hide")
+    paginationContainer.classList.add("hide_2")
+    emptyFilterSearch.classList.remove("hide")
+
+  } else {
+    selectionForDeletionContainer.classList.remove("hide_2")
+    transactionsMainContainer.classList.remove("hide")
+    paginationContainer.classList.remove("hide_2")
+    emptyFilterSearch.classList.add("hide")
+
+  }
+}
+
 const load = (parent,items, childTemplate, deleteFunc, url) => {
-    
-    items.map((element, index) => {
+    console.log(parent.tagName)
+    console.log(items)
+
+    if(items.length === 0 && parent.tagName === "SELECT"){
+         const stockOption = document.createElement("option")
+         stockOption.innerText = "Please add categories!"
+         stockOption.value = ""
+         parent.appendChild(stockOption)
+    }
+
+    // if (items.length === 0 && parent.tagName === "UL"){
+    //     loadTransactionMessage(true)
+    // } else {
+    //     loadTransactionMessage(false)
+    // }
+
+      items.map((element, index) => {
         const { ...args } = element
         const child = childTemplate(args)
 
@@ -377,15 +410,26 @@ const load = (parent,items, childTemplate, deleteFunc, url) => {
           parent.appendChild(stockOption)
         }
 
-        if(deleteFunc){
-            deleteFunc(child, url)
+        // console.log(items)
+
+        if (items.length === 0) {
+          console.log("da", items)
+        }
+
+        if (deleteFunc) {
+          deleteFunc(child, url)
         }
 
         parent.appendChild(child)
-    })
+      })
+    
+    
 }
 
 // load transactions takes as last parameter a boolean to signify if the pagination should be updated or not
+
+const emptyFilterSearch = document.querySelector(".filter_message")
+
 
 const loadTransactions = (parent, url, childTemplate, ifPagination) => {
 
@@ -398,27 +442,29 @@ const loadTransactions = (parent, url, childTemplate, ifPagination) => {
   getData(url).then((data) => {
 
     
-    if(data === null){
-
-      transactionsMainContainer.classList.add("hide")
-      paginationContainer.classList.add("hide")
-
-      // ADD A MESSAGE FOR TRANSACTIONS NOT FOUND
+    if(data.content.length === 0){
+  
+        // if transactions don t exist show no transactions found 
+        loadTransactionMessage(true) 
     
     } else {
-        transactionsMainContainer.classList.remove("hide")
-        paginationContainer.classList.remove("hide")
+      // if transactions exist hide the message
+      loadTransactionMessage(false) 
 
-        // REMOVE THE MESSAGE
-    
-        const paginatedItems = data.content
-        const pages = data.totalPages
-    
-        load(parent, paginatedItems, childTemplate, addDeleteFunctionality, transactionsURL)
-    
-        if (ifPagination) {
-          loadPagination(pages, url)
-        }
+      const paginatedItems = data.content
+      const pages = data.totalPages
+
+      load(
+        parent,
+        paginatedItems,
+        childTemplate,
+        addDeleteFunctionality,
+        transactionsURL
+      )
+
+      if (ifPagination) {
+        loadPagination(pages, url)
+      }
     }
 
   }).catch(error => console.log(error))
@@ -435,11 +481,15 @@ const loadElements = (parent, url, childTemplate, func) => {
     parent.innerHTML = ""
     getData(url).then(data => {
 
+        
         if(Array.isArray(data)){
             load(parent, data, childTemplate, func, url)
+            // console.log(data)
 
         } else {
             loadTransactions(parent, url, childTemplate, true)  
+            // console.log(data.content.length)
+           
         }
     }).catch(error => console.log(error))
 
@@ -734,9 +784,10 @@ const postTransaction = (object, e) => {
 
     const jsonObject = JSON.stringify(newObj)
 
-    sendToDataBase(transactionsURL, jsonObject)
-    loadTransactions(transactions, paginationURL, transaction, true)
-    successMessage("Transaction has been added!", "green")
+    sendToDataBase(transactionsURL, jsonObject, () => {
+        loadTransactions(transactions, paginationURL, transaction, true)
+        successMessage("Transaction has been added!", "green")
+    })
 }
 
 const processValidation = (object, e, successFunc) => {
@@ -816,9 +867,11 @@ categoriesForm.addEventListener("submit", (e) => {
 
 // 2
 
-//line 406 you need to add message in transactions for no transactions found
 
-// might need to add message in transactions also for no categories available add one
+//224 has problems with displaying no results after deletion
+
+// categories needs to notify user when there are no categories
+
 
 // also when there are no categories, add transaction should ask you to add category first
 

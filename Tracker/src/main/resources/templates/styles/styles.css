@@ -501,7 +501,14 @@ header ul li a {
 .container .pagination_container .current_page {
   background-color: rgb(55, 142, 248);
 }
-.container .hide {
+.container .filter_message {
+  margin-top: 2rem;
+}
+.container .filter_message h2 {
+  font-size: 2.5rem;
+  text-align: center;
+}
+.container .hide_2 {
   display: none;
 }
 
@@ -576,5 +583,8 @@ header ul li a {
   }
   .container .selection_for_deletion input {
     display: initial;
+  }
+  .container .hide_2 {
+    display: none;
   }
 }/*# sourceMappingURL=styles.css.map */

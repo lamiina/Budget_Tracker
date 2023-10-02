@@ -113,6 +113,8 @@ const sendToDataBase = (url, object, load) => {
       if(response.ok === "false"){
         successMessage("Something went wrong!", "red")
       }
+
+      return response
     })
     .catch((error) => {
       console.error("Fetch error:", error)
@@ -221,6 +223,8 @@ selectAllCurrentTransactions.addEventListener("click", e => {
 
 const deleteSelectedItemsButton = document.body.querySelector(".delete_element")
 
+
+// here the backend has to implement multiple id deletion
 const deleteSelectedItems = async () => {
   const checkedItems = highlightSelectedTransactions()
 
@@ -350,8 +354,14 @@ const addDeleteFunctionality = (element, url) => {
         deleteFromDataBase(url ,id, () => { 
             loadElements(simpleBarContainer, categoriesURL, categoryElement, addDeleteFunctionality)
             loadTransactions(transactions, paginationURL, transaction, true)
+            loadElements(categoryFilters, categoriesURL, filterOption)
+            loadElements(selectCategoryContainer, categoriesURL, filterOptionTransaction)
+
             successMessage("Item has been deleted!", "yellow")
+
             selectionForDeletionContainer.classList.remove("flex")
+
+            toggleEmptyCategoryMessage()
         })
     })
 }
@@ -365,6 +375,24 @@ const deleteEvents = (children) => {
 
 
 // Load functions
+
+const toggleEmptyCategoryMessage = () => {
+  const categoryContainer = document.body.querySelector(
+    ".categories_list_container"
+  )
+  const h2 = categoryContainer.parentNode.querySelector(".length_alert")
+
+  console.log(simpleBarContainer.children)
+
+  if (simpleBarContainer.children.length <= 0) {
+    categoryContainer.classList.add("hide")
+    h2.classList.remove("hide")
+  } else {
+    categoryContainer.classList.remove("hide")
+    h2.classList.add("hide")
+    
+  }
+}
 
 const loadTransactionMessage = (state) => {
   if (state) {
@@ -383,45 +411,45 @@ const loadTransactionMessage = (state) => {
 }
 
 const load = (parent,items, childTemplate, deleteFunc, url) => {
-    console.log(parent.tagName)
+    console.log(parent)
     console.log(items)
 
     if(items.length === 0 && parent.tagName === "SELECT"){
-         const stockOption = document.createElement("option")
-         stockOption.innerText = "Please add categories!"
-         stockOption.value = ""
-         parent.appendChild(stockOption)
+        const stockOption = document.createElement("option")
+        stockOption.innerText = "Please add categories!"
+        stockOption.value = ""
+        parent.appendChild(stockOption)
     }
 
-    // if (items.length === 0 && parent.tagName === "UL"){
-    //     loadTransactionMessage(true)
-    // } else {
-    //     loadTransactionMessage(false)
-    // }
 
-      items.map((element, index) => {
-        const { ...args } = element
-        const child = childTemplate(args)
+    items.map((element, index) => {
+    const { ...args } = element
+    const child = childTemplate(args)
 
-        if (index === 0 && child.tagName === "OPTION") {
-          const stockOption = document.createElement("option")
-          stockOption.innerText = "All"
-          stockOption.value = ""
-          parent.appendChild(stockOption)
-        }
+    if (index === 0 && child.tagName === "OPTION") {
+        const stockOption = document.createElement("option")
+        stockOption.innerText = "All"
+        stockOption.value = ""
+        parent.appendChild(stockOption)
+    }
 
-        // console.log(items)
+    // console.log(items)
 
-        if (items.length === 0) {
-          console.log("da", items)
-        }
+    if (items.length === 0) {
+        console.log("da", items)
+    }
 
-        if (deleteFunc) {
-          deleteFunc(child, url)
-        }
+    if (deleteFunc) {
+        deleteFunc(child, url)
+    }
 
-        parent.appendChild(child)
-      })
+    parent.appendChild(child)
+    })
+
+    
+    if(parent.classList.contains("simplebar-content")){
+        toggleEmptyCategoryMessage()
+    }
     
     
 }
@@ -486,6 +514,7 @@ const loadElements = (parent, url, childTemplate, func) => {
             load(parent, data, childTemplate, func, url)
             // console.log(data)
 
+            return true
         } else {
             loadTransactions(parent, url, childTemplate, true)  
             // console.log(data.content.length)
@@ -699,11 +728,16 @@ const undoErrors = (parent) => {
     }
 }
 
+
+
 const popupFunctionality = (pop, close, parent) => {
 
-    pop.addEventListener("click", () => {
+    pop.addEventListener("click", (e) => {
       parent.classList.remove("hide")
       document.body.classList.add("stop_scroll")
+      console.log(parent)
+      toggleEmptyCategoryMessage()
+
     })
 
     close.addEventListener("click", (e) => {
@@ -842,13 +876,16 @@ const postCategory = (object) => {
 
     const jsonObject = JSON.stringify(formObject)
 
-    sendToDataBase(categoriesURL, jsonObject, () => {
-        loadElements(simpleBarContainer, categoriesURL, categoryElement, addDeleteFunctionality)
+    const result = sendToDataBase(categoriesURL, jsonObject, () => {
+        console.log(loadElements(simpleBarContainer, categoriesURL, categoryElement, addDeleteFunctionality))
         loadElements(selectCategoryContainer, categoriesURL, filterOptionTransaction)
         loadElements(categoryFilters, categoriesURL, filterOption)
+
+       
     })
   
- 
+    console.log(result)
+    
     successMessage("Category has been added!", "green")
 }
 
@@ -861,6 +898,7 @@ categoriesForm.addEventListener("submit", (e) => {
     const formObject = Object.fromEntries(formData)
 
     processValidation(formObject, e, postCategory)
+    toggleEmptyCategoryMessage()
 })
 
 
@@ -868,12 +906,9 @@ categoriesForm.addEventListener("submit", (e) => {
 // 2
 
 
-//224 has problems with displaying no results after deletion
+//224 has problems with displaying no results after deletion but it has to be fixed by the backend
 
 // categories needs to notify user when there are no categories
-
-
-// also when there are no categories, add transaction should ask you to add category first
 
 
 
@@ -881,6 +916,10 @@ categoriesForm.addEventListener("submit", (e) => {
 // 3
 
 // Find out how to show loading bar while loading transactions 
+
+// could be based on the promise that is returned
+
+// you could make a function that takes the parent as a argument and apply on the parent a blur effect and a loading animation that disappears when the promise has been resolved
 
 
 // 4 

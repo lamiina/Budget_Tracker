@@ -132,6 +132,8 @@
                 }
             }
         }
+
+        @include no_data_h2_message(1.5rem);
     }
 }
 
@@ -355,10 +357,7 @@
 
     .filter_message{
         margin-top: 2rem;
-        h2{
-            font-size: 2.5rem;
-            text-align: center;
-        }
+       @include no_data_h2_message(2.5rem);
     }
 
     .hide_2{

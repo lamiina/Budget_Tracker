@@ -264,6 +264,10 @@ header ul li a {
 .add_transactions_popup .popup_container .categories_list_container ul li .delete_element:hover svg, .categories_popup .popup_container .categories_list_container ul li .delete_element:hover svg {
   transform: scale(1.2);
 }
+.add_transactions_popup .popup_container h2, .categories_popup .popup_container h2 {
+  font-size: 1.5rem;
+  text-align: center;
+}
 
 .container {
   max-width: 1100px;

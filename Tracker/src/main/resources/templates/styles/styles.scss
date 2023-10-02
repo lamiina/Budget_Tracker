@@ -132,6 +132,8 @@
                 }
             }
         }
+
+        @include no_data_h2_message(1.5rem);
     }
 }
 
@@ -352,7 +354,13 @@
         }
     }
 
-    .hide{
+
+    .filter_message{
+        margin-top: 2rem;
+       @include no_data_h2_message(2.5rem);
+    }
+
+    .hide_2{
         display: none;
     }
    
@@ -481,6 +489,11 @@
                 // input must be displayed in the next viewport
                 display: initial;
             }
+        }
+
+        .hide_2{
+            display: none;
+        
         }
     }
 }

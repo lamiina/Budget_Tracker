@@ -62,6 +62,13 @@ $s_spacing: 1rem;
     }
 }
 
+@mixin no_data_h2_message($size) {
+    h2{
+        font-size: $size;
+        text-align: center;
+    }
+}
+
 
 @keyframes popIN {
     0%{

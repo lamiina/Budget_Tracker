@@ -23,9 +23,32 @@ const categoriesURL = "http://localhost:8080/categories"
 const transactionsURL = "http://localhost:8080/transactions"
 const paginationURL = "http://localhost:8080/transactions/paged?"
 
-const getData = async (url) => {
+
+const addTransactionsLoadingAnimation = () => {
+    const loadingElement = document.createElement("div")
+    loadingElement.classList.add("loading_element")
+    loadingElement.innerHTML = `<span class="loader"></span>` 
+    
+    
+    transactionsMainContainer.appendChild(loadingElement)
+  
+}
+
+const removeTransactionsLoadingAnimation = () => {
+    const loading = transactionsMainContainer.querySelector(".loading_element")
+    transactionsMainContainer.removeChild(loading)
+} 
+
+
+const getData = async (url, loading) => {
 
     try {
+
+        // load the animation for loading inside the parent component
+        if(loading){
+            addTransactionsLoadingAnimation()
+        }
+
         const response = await fetch(url)
 
            if (!response.ok) {
@@ -41,7 +64,13 @@ const getData = async (url) => {
             }
             
         const data = await response.json()
-       
+
+
+
+        // here you hide the loading
+        if(loading){
+            removeTransactionsLoadingAnimation()
+        }
         return data
 
     } catch (error) {
@@ -413,6 +442,7 @@ const loadTransactionMessage = (state) => {
 const load = (parent,items, childTemplate, deleteFunc, url) => {
     console.log(parent)
     console.log(items)
+    parent.innerHTML = ""
 
     if(items.length === 0 && parent.tagName === "SELECT"){
         const stockOption = document.createElement("option")
@@ -465,9 +495,9 @@ const loadTransactions = (parent, url, childTemplate, ifPagination) => {
 
     deleteEvents(elementsWithEventListeners)
 
-    parent.innerHTML = ""
+    // parent.innerHTML = ""
 
-  getData(url).then((data) => {
+  getData(url, true).then((data) => {
 
     
     if(data.content.length === 0){
@@ -506,7 +536,7 @@ const loadElements = (parent, url, childTemplate, func) => {
         deleteEvents(elementsWithEventListeners)
     }
     
-    parent.innerHTML = ""
+    // parent.innerHTML = ""
     getData(url).then(data => {
 
         
@@ -913,21 +943,13 @@ categoriesForm.addEventListener("submit", (e) => {
 
 
 
-// 3
 
-// Find out how to show loading bar while loading transactions 
-
-// could be based on the promise that is returned
-
-// you could make a function that takes the parent as a argument and apply on the parent a blur effect and a loading animation that disappears when the promise has been resolved
-
-
-// 4 
+// 3 
 
 // you need to make a functionality that allows you to edit categories
 
 
-// 5 
+// 4 
 
 // when item is deleted pagination should load the page you are in
 // you can make it in such a way that only at aa certain viewport you can actually hover

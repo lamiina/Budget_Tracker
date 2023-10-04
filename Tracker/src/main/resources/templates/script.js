@@ -24,11 +24,19 @@ const transactionsURL = "http://localhost:8080/transactions"
 const paginationURL = "http://localhost:8080/transactions/paged?"
 
 
+const createTag = (tag, content) => {
+  const createTag = document.createElement(tag)
+
+  if(content){
+      createTag.innerHTML = content
+  }
+
+  return createTag
+}
+
 const addTransactionsLoadingAnimation = () => {
-    const loadingElement = document.createElement("div")
+    const loadingElement = createTag("div", `<span class="loader"></span>`)
     loadingElement.classList.add("loading_element")
-    loadingElement.innerHTML = `<span class="loader"></span>` 
-    
     
     transactionsMainContainer.appendChild(loadingElement)
   
@@ -281,15 +289,8 @@ deleteSelectedItemsButton.addEventListener("click", e => {
 })
 
 
+
 // Template functions for loading certain elements
-
-const listElement = (content) => {
-
-    const listElement = document.createElement("li")
-    listElement.innerHTML = content
-
-    return listElement
-}
 
 const filterOption = (args) => {
     const {description} = args
@@ -316,8 +317,8 @@ const filterOptionTransaction = (args) => {
 const transaction = (args) => {
     const {date, details, amount, category, id} = args
 
-    const element = listElement(
-      `
+    const element = createTag("li",
+    `
     <span>${date}</span>
     <span>${details}</span>
     <span>${category.description}</span>
@@ -340,7 +341,7 @@ const transaction = (args) => {
 const categoryElement = (args) => {
     const {description, type, id} = args
     
-    const element = listElement( 
+    const element = createTag("li", 
     `
     <span>${description}</span>
     <span>${type.toLowerCase()}</span>
@@ -353,35 +354,128 @@ const categoryElement = (args) => {
 }
 
 
+const addHoverFunctionality = (element, icon) => {
+   
+    icon.classList.add("delete_element")
+    icon.classList.add("hide")
 
-
-const addDeleteFunctionality = (element, url) => {
-    const deleteIcon = document.createElement("div")
-    deleteIcon.classList.add("delete_element")
-    deleteIcon.classList.add("hide")
-
-
-    deleteIcon.innerHTML = `<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="1rem" width="1rem" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M2.5 1a1 1 0 00-1 1v1a1 1 0 001 1H3v9a2 2 0 002 2h6a2 2 0 002-2V4h.5a1 1 0 001-1V2a1 1 0 00-1-1H10a1 1 0 00-1-1H7a1 1 0 00-1 1H2.5zm3 4a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7a.5.5 0 01.5-.5zM8 5a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7A.5.5 0 018 5zm3 .5a.5.5 0 00-1 0v7a.5.5 0 001 0v-7z" clip-rule="evenodd"></path></svg>` 
-
-    element.appendChild(deleteIcon)
+    element.appendChild(icon)
 
     element.addEventListener("mouseover", (e) => {
-        deleteIcon.classList.remove("hide") 
-        deleteIcon.classList.add("flex")
-
+      icon.classList.remove("hide")
+      icon.classList.add("flex")
     })
 
     element.addEventListener("mouseout", (e) => {
-        deleteIcon.classList.add("hide")
-        deleteIcon.classList.remove("flex")
-        
+      icon.classList.add("hide")
+      icon.classList.remove("flex")
     })
 
+    
+}
+
+
+// when clicked out the edit mode needs to deactivate and go back to initial form
+
+// This means that you might have to break your editFunctionality in more functions so you can use them in an event listener for the body or document
+
+// issue, when popup is closed the edit active items are going to break
+
+const editFunctionality = (element, icon) => {
+
+    let isToggled = false
+
+    icon.addEventListener("click", () => {
+        const spans = element.children
+
+
+        if(!isToggled){
+            const nameInput = createTag("input")
+            nameInput.setAttribute("type", "text")
+            nameInput.setAttribute("value", spans[0].innerText)
+            nameInput.setAttribute("name", "edit")
+            spans[0].parentNode.replaceChild(nameInput, spans[0])
+            spans[0].setSelectionRange(spans[0].value.length, spans[0].value.length)
+            spans[0].focus()
+
+
+            const selectInput = createTag("div")
+            selectInput.innerHTML = `
+            <select name="edit_type">
+            
+            <option value="${spans[1].innerText}">${spans[1].innerText}</option>
+
+            ${
+              spans[1].innerText === "Income"
+                ? `<option value="expense">Expense</option>
+                   <option value="investment">Investment</option>`
+                : ""
+            }
+
+            ${
+              spans[1].innerText === "Expense"
+                ? `<option value="income">Income</option>
+                   <option value="investment">Investment</option>`
+                : ""
+            }
+
+            ${
+               spans[1].innerText === "Investment"
+                ? `<option value="income">Income</option>
+                   <option value="expense">Expense</option>`
+                : ""
+            }
+            </select>
+            `
+            spans[1].parentNode.replaceChild(selectInput, spans[1])
+
+
+
+        } else {
+            const span = createTag("span", spans[0].value)
+            const spanTwo = createTag("span", spans[1].children[0].value)
+            
+            spans[0].parentNode.replaceChild(span, spans[0])
+            spans[1].parentNode.replaceChild(spanTwo, spans[1])
+      
+        }
+
+
+        isToggled = !isToggled
+
+        // this might need to go in the else statement
+        const objForApi = {
+            name: spans[0].innerHTML,
+            type: spans[1].innerHTML.toUpperCase()
+        }
+        console.log(spans[0], spans[1])
+        console.log(element.id)
+        
+        // make a fetch call and add put
+    
+        // {name: "salary", type:"income"}
+    })
+
+    
+
+
+}
+
+
+const addDeleteAndEditFunctionality = (element, url, edit) => {
+    const deleteIcon = createTag(
+      "div",
+      `<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="1rem" width="1rem" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M2.5 1a1 1 0 00-1 1v1a1 1 0 001 1H3v9a2 2 0 002 2h6a2 2 0 002-2V4h.5a1 1 0 001-1V2a1 1 0 00-1-1H10a1 1 0 00-1-1H7a1 1 0 00-1 1H2.5zm3 4a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7a.5.5 0 01.5-.5zM8 5a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7A.5.5 0 018 5zm3 .5a.5.5 0 00-1 0v7a.5.5 0 001 0v-7z" clip-rule="evenodd"></path></svg>`
+    )
+
+    addHoverFunctionality(element, deleteIcon)
+    
+    
     deleteIcon.addEventListener("click", () => {
         const id = element.id
     
         deleteFromDataBase(url ,id, () => { 
-            loadElements(simpleBarContainer, categoriesURL, categoryElement, addDeleteFunctionality)
+            loadElements(simpleBarContainer, categoriesURL, categoryElement, addDeleteAndEditFunctionality)
             loadTransactions(transactions, paginationURL, transaction, true)
             loadElements(categoryFilters, categoriesURL, filterOption)
             loadElements(selectCategoryContainer, categoriesURL, filterOptionTransaction)
@@ -393,6 +487,17 @@ const addDeleteFunctionality = (element, url) => {
             toggleEmptyCategoryMessage()
         })
     })
+
+    if(edit){
+         const editIcon = createTag(
+           "div",
+           `<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1.2rem" width="1.2rem" xmlns="http://www.w3.org/2000/svg"><path d="M7,17.013l4.413-0.015l9.632-9.54c0.378-0.378,0.586-0.88,0.586-1.414s-0.208-1.036-0.586-1.414l-1.586-1.586	c-0.756-0.756-2.075-0.752-2.825-0.003L7,12.583V17.013z M18.045,4.458l1.589,1.583l-1.597,1.582l-1.586-1.585L18.045,4.458z M9,13.417l6.03-5.973l1.586,1.586l-6.029,5.971L9,15.006V13.417z"></path><path d="M5,21h14c1.103,0,2-0.897,2-2v-8.668l-2,2V19H8.158c-0.026,0-0.053,0.01-0.079,0.01c-0.033,0-0.066-0.009-0.1-0.01H5V5	h6.847l2-2H5C3.897,3,3,3.897,3,5v14C3,20.103,3.897,21,5,21z"></path></svg>`
+         )
+
+        addHoverFunctionality(element, editIcon)
+        editFunctionality(element, editIcon)
+        // add edit functionality
+    }
 }
 
 const deleteEvents = (children) => {
@@ -470,7 +575,13 @@ const load = (parent,items, childTemplate, deleteFunc, url) => {
     }
 
     if (deleteFunc) {
-        deleteFunc(child, url)
+        console.log(parent.classList)
+        if(parent.classList.contains("simplebar-content")){
+            deleteFunc(child, url, true)
+        } else {
+            deleteFunc(child, url)
+
+        }
     }
 
     parent.appendChild(child)
@@ -516,7 +627,7 @@ const loadTransactions = (parent, url, childTemplate, ifPagination) => {
         parent,
         paginatedItems,
         childTemplate,
-        addDeleteFunctionality,
+        addDeleteAndEditFunctionality,
         transactionsURL
       )
 
@@ -570,7 +681,7 @@ const loadPagination = (pages, url = "http://localhost:8080/transactions/paged?"
     pagination.innerHTML = ""
 
     for(let i  = 0; i < pages; i++){
-        const paginationElement = listElement(i + 1)
+        const paginationElement = createTag("li", i + 1)
 
         if(i === 0){
             paginationElement.classList.add("current_page")
@@ -623,8 +734,8 @@ addFunctionalityToPaginationButtons()
 // Loading when app starts
 
 loadElements(categoryFilters, categoriesURL, filterOption)
-loadElements(transactions, paginationURL, transaction, addDeleteFunctionality)
-loadElements(simpleBarContainer, categoriesURL, categoryElement, addDeleteFunctionality)
+loadElements(transactions, paginationURL, transaction, addDeleteAndEditFunctionality)
+loadElements(simpleBarContainer, categoriesURL, categoryElement, addDeleteAndEditFunctionality)
 
 
 
@@ -708,7 +819,7 @@ const handleFilters = async () => {
       transactions,
       paginationURL,
       transaction,
-      addDeleteFunctionality
+      addDeleteAndEditFunctionality
     )
   }
 
@@ -907,7 +1018,7 @@ const postCategory = (object) => {
     const jsonObject = JSON.stringify(formObject)
 
     const result = sendToDataBase(categoriesURL, jsonObject, () => {
-        console.log(loadElements(simpleBarContainer, categoriesURL, categoryElement, addDeleteFunctionality))
+        console.log(loadElements(simpleBarContainer, categoriesURL, categoryElement, addDeleteAndEditFunctionality))
         loadElements(selectCategoryContainer, categoriesURL, filterOptionTransaction)
         loadElements(categoryFilters, categoriesURL, filterOption)
 

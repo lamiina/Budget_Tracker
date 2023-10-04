@@ -318,6 +318,31 @@ header ul li a {
 .add_transactions_popup .popup_container .categories_list_container ul li .delete_element:hover svg, .categories_popup .popup_container .categories_list_container ul li .delete_element:hover svg {
   transform: scale(1.2);
 }
+.add_transactions_popup .popup_container .categories_list_container ul li .delete_element:last-of-type, .categories_popup .popup_container .categories_list_container ul li .delete_element:last-of-type {
+  right: 0.3rem;
+  color: #edbf6b;
+}
+.add_transactions_popup .popup_container .categories_list_container ul li input, .add_transactions_popup .popup_container .categories_list_container ul li select, .categories_popup .popup_container .categories_list_container ul li input, .categories_popup .popup_container .categories_list_container ul li select {
+  font-family: inherit;
+  outline: none;
+  background-color: inherit;
+  font-size: inherit;
+}
+.add_transactions_popup .popup_container .categories_list_container ul li input, .categories_popup .popup_container .categories_list_container ul li input {
+  width: 100%;
+  border: 1px solid #edbf6b;
+  text-indent: 0.5rem;
+}
+.add_transactions_popup .popup_container .categories_list_container ul li div, .categories_popup .popup_container .categories_list_container ul li div {
+  width: 100%;
+  border: 1px solid #edbf6b;
+  border-left: none;
+}
+.add_transactions_popup .popup_container .categories_list_container ul li div select, .categories_popup .popup_container .categories_list_container ul li div select {
+  padding: 0.5rem;
+  cursor: pointer;
+  border: none;
+}
 .add_transactions_popup .popup_container h2, .categories_popup .popup_container h2 {
   font-size: 1.5rem;
   text-align: center;

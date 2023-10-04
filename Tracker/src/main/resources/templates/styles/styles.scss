@@ -103,19 +103,12 @@
             
 
             ul{
-                // overflow-y: scroll;
                 max-height: 200px;
 
                 li{
                     position: relative;
                     display: flex; 
-                  
-                    // transition: background-color 0.3s ease-in-out;
-
-                    // &:hover{
-                    //     background-color: lighten($button_color, 25%);
-                    // }
-                            
+                         
                     span{
                         border-top: 1px solid $border_color;
 
@@ -129,8 +122,38 @@
 
                     .delete_element{
                         @include deleteButton;
+
+                        &:last-of-type{
+                            right: 0.3rem;
+                            color: $yellow
+                        }
                     }
 
+                    input, select{
+                        font-family: inherit;
+                        outline: none;
+                        background-color: inherit;
+                        font-size: inherit;
+                    }
+
+
+                    input{
+                        width: 100%;
+                        border: 1px solid $yellow;
+                        text-indent: 0.5rem;
+                    }
+
+                    div{
+                        width: 100%;
+                        border: 1px solid $yellow;
+                        border-left: none;
+
+                        select{
+                            padding: 0.5rem;
+                            cursor: pointer;
+                            border: none;
+                        }
+                    }
                 }
             }
         }

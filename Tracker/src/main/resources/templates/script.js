@@ -22,6 +22,7 @@
 const categoriesURL = "http://localhost:8080/categories"
 const transactionsURL = "http://localhost:8080/transactions"
 const paginationURL = "http://localhost:8080/transactions/paged?"
+const multiDeleteUrl = "http://localhost:8080/transactions/multiDelete"
 
 
 const createTag = (tag, content) => {
@@ -99,6 +100,33 @@ const getCategory = async (description, type) => {
         
     }
 
+}
+
+// 
+
+const multipleDeletionFromDataBase = (url, array, load) => {
+    fetch(url, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: array,
+    })
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error(`Failed to delete item (status ${response.status})`)
+        }
+
+        if (response.status === 204 && load) {
+            load()
+        }
+    })
+    .then((data) => {
+        console.log("Item deleted successfully", data)
+    })
+    .catch((error) => {
+        console.error("Error:", error)
+    })
 }
 
 
@@ -265,22 +293,20 @@ const deleteSelectedItemsButton = document.body.querySelector(".delete_element")
 const deleteSelectedItems = async () => {
   const checkedItems = highlightSelectedTransactions()
 
-  const deleteItems = checkedItems.map((node) => {
+  const itemsToDelete = checkedItems.map((node) => {
     const { id } = node
-
-    deleteFromDataBase(transactionsURL, id)
+    return parseInt(id)
   })
 
-  const deletion = Promise.all(deleteItems)
+  console.log(itemsToDelete)
 
-  deletion.then(notUsed => {
+  // multipleDeletionFromDataBase(multiDeleteUrl, itemsToDelete, () => {
+      
+        //   loadTransactions(transactions, paginationURL, transaction, true)
+        //   successMessage("Items have been deleted!", "yellow")
+        //   selectionForDeletionContainer.classList.remove("flex")
 
-      loadTransactions(transactions, paginationURL, transaction, true)
-      successMessage("Items have been deleted!", "yellow")
-      selectionForDeletionContainer.classList.remove("flex")
-  })
-
-
+//   })
 }
 
 
@@ -340,11 +366,48 @@ const transaction = (args) => {
 
 const categoryElement = (args) => {
     const {description, type, id} = args
+
+    const lowerCaseType = type.toLowerCase()
     
-    const element = createTag("li", 
-    `
-    <span>${description}</span>
-    <span>${type.toLowerCase()}</span>
+    const element = createTag(
+      "li",
+      `
+    <p class="flex">
+        <span>${description}</span>
+        <span>${lowerCaseType}</span>
+    </p>
+
+    <div class="edit_element hide">
+        <input type="text" value="123123" name="edit">
+        <div class="select">
+            <select name="edit_type">
+            
+            <option value="${lowerCaseType}">${lowerCaseType}</option>
+
+            ${
+              lowerCaseType === "income"
+                ? `<option value="expense">Expense</option>
+                   <option value="investment">Investment</option>`
+                : ""
+            }
+
+            ${
+              lowerCaseType === "expense"
+                ? `<option value="income">Income</option>
+                   <option value="investment">Investment</option>`
+                : ""
+            }
+
+            ${
+              lowerCaseType === "investment"
+                ? `<option value="income">Income</option>
+                   <option value="expense">Expense</option>`
+                : ""
+            }
+            </select>
+            
+        </div>
+    </div>
     `
     )
 
@@ -385,59 +448,29 @@ const editFunctionality = (element, icon) => {
 
     let isToggled = false
 
-    icon.addEventListener("click", () => {
-        const spans = element.children
+    icon.addEventListener("click", (e) => {
+    //     const spans = element.children
+        const currentTypeAndName = element.querySelector('p')
+        const editContainer = element.querySelector(".edit_element")
+        
+        const spans = currentTypeAndName.children
+        const editInputs = editContainer.children
+
 
 
         if(!isToggled){
-            const nameInput = createTag("input")
-            nameInput.setAttribute("type", "text")
-            nameInput.setAttribute("value", spans[0].innerText)
-            nameInput.setAttribute("name", "edit")
-            spans[0].parentNode.replaceChild(nameInput, spans[0])
-            spans[0].setSelectionRange(spans[0].value.length, spans[0].value.length)
-            spans[0].focus()
-
-
-            const selectInput = createTag("div")
-            selectInput.innerHTML = `
-            <select name="edit_type">
-            
-            <option value="${spans[1].innerText}">${spans[1].innerText}</option>
-
-            ${
-              spans[1].innerText === "Income"
-                ? `<option value="expense">Expense</option>
-                   <option value="investment">Investment</option>`
-                : ""
-            }
-
-            ${
-              spans[1].innerText === "Expense"
-                ? `<option value="income">Income</option>
-                   <option value="investment">Investment</option>`
-                : ""
-            }
-
-            ${
-               spans[1].innerText === "Investment"
-                ? `<option value="income">Income</option>
-                   <option value="expense">Expense</option>`
-                : ""
-            }
-            </select>
-            `
-            spans[1].parentNode.replaceChild(selectInput, spans[1])
-
+            currentTypeAndName.classList.replace("flex", "hide")
+            editContainer.classList.replace("hide", "flex")
 
 
         } else {
-            const span = createTag("span", spans[0].value)
-            const spanTwo = createTag("span", spans[1].children[0].value)
-            
-            spans[0].parentNode.replaceChild(span, spans[0])
-            spans[1].parentNode.replaceChild(spanTwo, spans[1])
-      
+
+            currentTypeAndName.classList.replace("hide", "flex")
+            editContainer.classList.replace("flex", "hide")
+
+            spans[0].innerHTML = editInputs[0].value
+            spans[1].innerHTML = editInputs[1].querySelector("select").value
+
         }
 
 
@@ -448,8 +481,6 @@ const editFunctionality = (element, icon) => {
             name: spans[0].innerHTML,
             type: spans[1].innerHTML.toUpperCase()
         }
-        console.log(spans[0], spans[1])
-        console.log(element.id)
 
         // make a fetch call and add put
     

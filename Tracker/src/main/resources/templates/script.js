@@ -289,7 +289,6 @@ selectAllCurrentTransactions.addEventListener("click", e => {
 const deleteSelectedItemsButton = document.body.querySelector(".delete_element")
 
 
-// here the backend has to implement multiple id deletion
 const deleteSelectedItems = async () => {
   const checkedItems = highlightSelectedTransactions()
 
@@ -298,15 +297,13 @@ const deleteSelectedItems = async () => {
     return parseInt(id)
   })
 
-  console.log(itemsToDelete)
+  const jsonItemsToDelete = JSON.stringify(itemsToDelete)
 
-  // multipleDeletionFromDataBase(multiDeleteUrl, itemsToDelete, () => {
-      
-        //   loadTransactions(transactions, paginationURL, transaction, true)
-        //   successMessage("Items have been deleted!", "yellow")
-        //   selectionForDeletionContainer.classList.remove("flex")
-
-//   })
+  multipleDeletionFromDataBase(multiDeleteUrl, jsonItemsToDelete, () => {
+    loadTransactions(transactions, paginationURL, transaction, true)
+    successMessage("Items have been deleted!", "yellow")
+    selectionForDeletionContainer.classList.remove("flex")
+  })
 }
 
 
@@ -1067,15 +1064,6 @@ categoriesForm.addEventListener("submit", (e) => {
     processValidation(formObject, e, postCategory)
     toggleEmptyCategoryMessage()
 })
-
-
-
-// 2
-
-
-//224 has problems with displaying no results after deletion but it has to be fixed by the backend
-
-// categories needs to notify user when there are no categories
 
 
 

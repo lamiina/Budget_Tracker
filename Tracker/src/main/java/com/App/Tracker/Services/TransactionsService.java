@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -109,9 +110,6 @@ public class TransactionsService {
         return ResponseEntity.ok(transactionsRepo.save(transaction));
     }
 
-
-
-
     public ResponseEntity<Transactions> updateTransaction(long id, Transactions transaction) {
         Optional<Transactions> foundTransaction = this.transactionsRepo.findById(id);
 
@@ -137,7 +135,6 @@ public class TransactionsService {
         return ResponseEntity.ok(transactionsRepo.save(updateTransaction));
     }
 
-
     public ResponseEntity<Object> deleteTransaction(long id) {
 
         Optional<Transactions> optionalTransaction = transactionsRepo.findById(id);
@@ -147,6 +144,21 @@ public class TransactionsService {
         }
 
         this.transactionsRepo.deleteById(id);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    public ResponseEntity<Object> deleteMultipleTransactions( List<Long> ids){
+        List<Long> deletedIds = new ArrayList<>();
+
+        for( Long id : ids){
+            this.transactionsRepo.deleteById(id);
+            deletedIds.add(id);
+        }
+
+        if(deletedIds.isEmpty()){
+            throw new NotFoundException("Invalid transactions selected");
+        }
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

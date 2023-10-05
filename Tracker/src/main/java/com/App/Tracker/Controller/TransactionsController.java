@@ -32,6 +32,7 @@ public class TransactionsController {
             @RequestParam(name = "size", defaultValue = "10") int size) {
         return transactionsService.getAllTransactionsPage(page, size);
     }
+
     @GetMapping("/filter")
     public ResponseEntity<Page<Transactions>> filterTransactions(
             @RequestParam(name = "startDate", required = false) String startDate,
@@ -69,6 +70,11 @@ public class TransactionsController {
     @DeleteMapping(value = "{id}")
     public ResponseEntity<Object> deleteTransaction(@PathVariable long id) {
         return this.transactionsService.deleteTransaction(id);
+    }
+
+    @DeleteMapping( value = "/multiDelete")
+    public ResponseEntity<Object> deleteMultiple(@RequestBody List<Long> ids) {
+        return this.transactionsService.deleteMultipleTransactions(ids);
     }
 
 }

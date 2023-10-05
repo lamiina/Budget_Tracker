@@ -450,17 +450,12 @@ const editFunctionality = (element, icon) => {
         }
         console.log(spans[0], spans[1])
         console.log(element.id)
-        
+
         // make a fetch call and add put
     
         // {name: "salary", type:"income"}
     })
-
-    
-
-
 }
-
 
 const addDeleteAndEditFunctionality = (element, url, edit) => {
     const deleteIcon = createTag(

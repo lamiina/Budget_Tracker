@@ -287,7 +287,10 @@ header ul li a {
   position: relative;
   display: flex;
 }
-.add_transactions_popup .popup_container .categories_list_container ul li span, .categories_popup .popup_container .categories_list_container ul li span {
+.add_transactions_popup .popup_container .categories_list_container ul li p, .categories_popup .popup_container .categories_list_container ul li p {
+  width: 100%;
+}
+.add_transactions_popup .popup_container .categories_list_container ul li p span, .categories_popup .popup_container .categories_list_container ul li p span {
   border-top: 1px solid #dddcdc;
   text-transform: capitalize;
 }
@@ -333,12 +336,15 @@ header ul li a {
   border: 1px solid #edbf6b;
   text-indent: 0.5rem;
 }
-.add_transactions_popup .popup_container .categories_list_container ul li div, .categories_popup .popup_container .categories_list_container ul li div {
+.add_transactions_popup .popup_container .categories_list_container ul li .edit_element, .categories_popup .popup_container .categories_list_container ul li .edit_element {
+  width: 100%;
+}
+.add_transactions_popup .popup_container .categories_list_container ul li .edit_element div, .categories_popup .popup_container .categories_list_container ul li .edit_element div {
   width: 100%;
   border: 1px solid #edbf6b;
   border-left: none;
 }
-.add_transactions_popup .popup_container .categories_list_container ul li div select, .categories_popup .popup_container .categories_list_container ul li div select {
+.add_transactions_popup .popup_container .categories_list_container ul li .edit_element div select, .categories_popup .popup_container .categories_list_container ul li .edit_element div select {
   padding: 0.5rem;
   cursor: pointer;
   border: none;

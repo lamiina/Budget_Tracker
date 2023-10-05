@@ -108,11 +108,15 @@
                 li{
                     position: relative;
                     display: flex; 
-                         
-                    span{
-                        border-top: 1px solid $border_color;
-
-                        text-transform: capitalize;
+                     
+                    p{
+                        width: 100%;
+                        
+                        span{
+                            border-top: 1px solid $border_color;
+    
+                            text-transform: capitalize;
+                        }
                     }
 
                     &:nth-of-type(odd){
@@ -143,15 +147,20 @@
                         text-indent: 0.5rem;
                     }
 
-                    div{
+                    .edit_element{
+                       
                         width: 100%;
-                        border: 1px solid $yellow;
-                        border-left: none;
-
-                        select{
-                            padding: 0.5rem;
-                            cursor: pointer;
-                            border: none;
+                        div{
+                            width: 100%;
+                            border: 1px solid $yellow;
+                            border-left: none;
+                            
+    
+                            select{
+                                padding: 0.5rem;
+                                cursor: pointer;
+                                border: none;
+                            }
                         }
                     }
                 }

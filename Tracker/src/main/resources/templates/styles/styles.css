@@ -306,7 +306,7 @@ header ul li a {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
-  right: 2rem;
+  right: 2.5rem;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
@@ -322,7 +322,7 @@ header ul li a {
   transform: scale(1.2);
 }
 .add_transactions_popup .popup_container .categories_list_container ul li .delete_element:last-of-type, .categories_popup .popup_container .categories_list_container ul li .delete_element:last-of-type {
-  right: 0.3rem;
+  right: 0.8rem;
   color: #edbf6b;
 }
 .add_transactions_popup .popup_container .categories_list_container ul li input, .add_transactions_popup .popup_container .categories_list_container ul li select, .categories_popup .popup_container .categories_list_container ul li input, .categories_popup .popup_container .categories_list_container ul li select {
@@ -333,7 +333,7 @@ header ul li a {
 }
 .add_transactions_popup .popup_container .categories_list_container ul li input, .categories_popup .popup_container .categories_list_container ul li input {
   width: 100%;
-  border: 1px solid #edbf6b;
+  border: 2px solid #edbf6b;
   text-indent: 0.5rem;
 }
 .add_transactions_popup .popup_container .categories_list_container ul li .edit_element, .categories_popup .popup_container .categories_list_container ul li .edit_element {
@@ -341,11 +341,13 @@ header ul li a {
 }
 .add_transactions_popup .popup_container .categories_list_container ul li .edit_element div, .categories_popup .popup_container .categories_list_container ul li .edit_element div {
   width: 100%;
-  border: 1px solid #edbf6b;
+  border: 2px solid #edbf6b;
   border-left: none;
 }
 .add_transactions_popup .popup_container .categories_list_container ul li .edit_element div select, .categories_popup .popup_container .categories_list_container ul li .edit_element div select {
-  padding: 0.5rem;
+  padding: 0.5rem 0;
+  text-indent: 0.3rem;
+  text-transform: capitalize;
   cursor: pointer;
   border: none;
 }
@@ -425,7 +427,7 @@ header ul li a {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
-  right: 2rem;
+  right: 2.5rem;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
@@ -510,7 +512,7 @@ header ul li a {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
-  right: 2rem;
+  right: 2.5rem;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;

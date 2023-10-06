@@ -1,3 +1,4 @@
+localStorage.setItem("current_page", false)
 /*
         http://localhost:8080/transactions - get all, post, put, delete transactions
         http://localhost:8080/transactions/paged?page={number} - paged get transactions
@@ -63,6 +64,11 @@ const getData = async (url, loading) => {
            if (!response.ok) {
                 if (response.status === 404) {
                     console.log("Resource not found (404)")
+                    loadTransactionMessage()
+
+                    if (loading) {
+                      removeTransactionsLoadingAnimation()
+                    }
                 
                 } else {
                     console.error(`Server returned status: ${response.status}`)
@@ -186,6 +192,38 @@ const sendToDataBase = (url, object, load) => {
     })
 }
 
+const editFromDatabase = (url, object, load) => {
+     fetch(url, {
+       method: "PUT",
+       headers: {
+         "Content-Type": "application/json",
+       },
+       body: object,
+     })
+       .then((response) => {
+         console.log("Server response:", response)
+
+         if (response.status === 500) {
+           successMessage("Category already exists!", "red")
+         }
+
+         if (response.status === 201 || response.status === 200) {
+            if(load){
+                load()
+            }
+         }
+
+         if (response.ok === "false") {
+           successMessage("Something went wrong!", "red")
+         }
+
+         return response
+       })
+       .catch((error) => {
+         console.error("Fetch error:", error)
+       })
+}
+
 
 
                     // Loading application functionality
@@ -204,9 +242,6 @@ const simpleBarContainer = document.body.querySelector(".simplebar-content")
 
 // Checkbox functionality
 
-// you will have to select the checkbox and delete button from the top of transactions
-
-// you have to position the bar from top of the transactions when it s on small viewport
 
 const selectionForDeletionContainer = document.body.querySelector(".selection_for_deletion")
 const countForDeletion = document.getElementById("count_for_deletion")
@@ -300,7 +335,7 @@ const deleteSelectedItems = async () => {
   const jsonItemsToDelete = JSON.stringify(itemsToDelete)
 
   multipleDeletionFromDataBase(multiDeleteUrl, jsonItemsToDelete, () => {
-    loadTransactions(transactions, paginationURL, transaction, true)
+    loadTransactions(transactions, getCurrentPageQuery(), transaction, true)
     successMessage("Items have been deleted!", "yellow")
     selectionForDeletionContainer.classList.remove("flex")
   })
@@ -368,14 +403,14 @@ const categoryElement = (args) => {
     
     const element = createTag(
       "li",
-      `
+    `
     <p class="flex">
         <span>${description}</span>
         <span>${lowerCaseType}</span>
     </p>
 
     <div class="edit_element hide">
-        <input type="text" value="123123" name="edit">
+        <input type="text" value=${description} name="edit">
         <div class="select">
             <select name="edit_type">
             
@@ -442,50 +477,96 @@ const addHoverFunctionality = (element, icon) => {
 // issue, when popup is closed the edit active items are going to break
 
 const editFunctionality = (element, icon) => {
+    const id = element.id
+    const url = `${categoriesURL}/${id}`
 
     let isToggled = false
 
+    const currentTypeAndName = element.querySelector('p')
+    const editContainer = element.querySelector(".edit_element")
+    
+    const spans = currentTypeAndName.children
+    const editInputs = editContainer.children
+
     icon.addEventListener("click", (e) => {
-    //     const spans = element.children
-        const currentTypeAndName = element.querySelector('p')
-        const editContainer = element.querySelector(".edit_element")
-        
-        const spans = currentTypeAndName.children
-        const editInputs = editContainer.children
-
-
-
+    
         if(!isToggled){
+            element.classList.add("edit_mode_active")
             currentTypeAndName.classList.replace("flex", "hide")
             editContainer.classList.replace("hide", "flex")
 
+            editInputs[0].value = spans[0].innerText
+            editInputs[0].setSelectionRange(editInputs[0].value.length,editInputs[0].value.length)
+            editInputs[0].focus()
 
+            console.log(spans[0], spans[1])
+            console.log(editInputs[0], editInputs[1])
         } else {
 
+            element.classList.remove("edit_mode_active")
             currentTypeAndName.classList.replace("hide", "flex")
             editContainer.classList.replace("flex", "hide")
 
             spans[0].innerHTML = editInputs[0].value
             spans[1].innerHTML = editInputs[1].querySelector("select").value
 
+            const objForApi = {
+                description: spans[0].innerHTML,
+                type: spans[1].innerHTML.toUpperCase()
+            }
+
+            console.log(objForApi)
+            const jsonObj = JSON.stringify(objForApi)
+            editFromDatabase(url, jsonObj, ()=> {loadTransactions(transactions, paginationURL, transaction, true)} )
         }
 
 
+        console.log(element)
         isToggled = !isToggled
 
-        // this might need to go in the else statement
-        const objForApi = {
-            name: spans[0].innerHTML,
-            type: spans[1].innerHTML.toUpperCase()
-        }
 
-        // make a fetch call and add put
-    
-        // {name: "salary", type:"income"}
     })
+
+   const parentContainer = document.body.querySelector(".categories_popup")
+
+   parentContainer.addEventListener("click", e => {
+    if(!element.contains(e.target)){
+            if(element.classList.contains("edit_mode_active")){
+
+                currentTypeAndName.classList.replace("hide", "flex")
+                editContainer.classList.replace("flex", "hide")
+    
+                spans[0].innerHTML = editInputs[0].value
+                spans[1].innerHTML = editInputs[1].querySelector("select").value
+                const objForApi = {
+                  name: spans[0].innerHTML,
+                  type: spans[1].innerHTML.toUpperCase(),
+                }
+    
+                const jsonObj = JSON.stringify(objForApi)
+                editFromDatabase(url, jsonObj, () => {
+                  loadTransactions(
+                    transactions,
+                    paginationURL,
+                    transaction,
+                    true
+                  )
+                })
+
+            }
+    } 
+   })
+}
+
+const getCurrentPageQuery = () => {
+     const currentPage = localStorage.getItem("current_page")
+
+     return `${paginationURL}${currentPage ? `page=${currentPage}` : ""}`
 }
 
 const addDeleteAndEditFunctionality = (element, url, edit) => {
+
+
     const deleteIcon = createTag(
       "div",
       `<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="1rem" width="1rem" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M2.5 1a1 1 0 00-1 1v1a1 1 0 001 1H3v9a2 2 0 002 2h6a2 2 0 002-2V4h.5a1 1 0 001-1V2a1 1 0 00-1-1H10a1 1 0 00-1-1H7a1 1 0 00-1 1H2.5zm3 4a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7a.5.5 0 01.5-.5zM8 5a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7A.5.5 0 018 5zm3 .5a.5.5 0 00-1 0v7a.5.5 0 001 0v-7z" clip-rule="evenodd"></path></svg>`
@@ -499,9 +580,16 @@ const addDeleteAndEditFunctionality = (element, url, edit) => {
     
         deleteFromDataBase(url ,id, () => { 
             loadElements(simpleBarContainer, categoriesURL, categoryElement, addDeleteAndEditFunctionality)
-            loadTransactions(transactions, paginationURL, transaction, true)
+            loadTransactions(
+              transactions,
+              getCurrentPageQuery(),
+              transaction,
+              true
+            )
+
             loadElements(categoryFilters, categoriesURL, filterOption)
             loadElements(selectCategoryContainer, categoriesURL, filterOptionTransaction)
+            
 
             successMessage("Item has been deleted!", "yellow")
 
@@ -591,11 +679,6 @@ const load = (parent,items, childTemplate, deleteFunc, url) => {
         parent.appendChild(stockOption)
     }
 
-    // console.log(items)
-
-    if (items.length === 0) {
-        console.log("da", items)
-    }
 
     if (deleteFunc) {
         console.log(parent.classList)
@@ -630,13 +713,17 @@ const loadTransactions = (parent, url, childTemplate, ifPagination) => {
     deleteEvents(elementsWithEventListeners)
 
     // parent.innerHTML = ""
+    console.log(url, parent)
 
   getData(url, true).then((data) => {
 
-    
-    if(data.content.length === 0){
-  
+    if(data === null){
+        loadTransactionMessage(true) 
+    }
+      
+    if(data.content.length === 0 || data === null){
         // if transactions don t exist show no transactions found 
+       
         loadTransactionMessage(true) 
     
     } else {
@@ -655,10 +742,14 @@ const loadTransactions = (parent, url, childTemplate, ifPagination) => {
       )
 
       if (ifPagination) {
-        loadPagination(pages, url)
+        loadPagination(pages)
+        loadCurrentPage()
+
+        
       }
     }
 
+    return true
   }).catch(error => console.log(error))
 }
  
@@ -697,6 +788,7 @@ const pagination = document.getElementById("pagination")
 
 const loadPagination = (pages, url = "http://localhost:8080/transactions/paged?") => {
     
+
     const paginationButtonElements = pagination.children
    
     deleteEvents(paginationButtonElements)
@@ -719,6 +811,7 @@ const loadPagination = (pages, url = "http://localhost:8080/transactions/paged?"
             currentSelectedPage.classList.remove("current_page")
 
             e.target.classList.add("current_page")
+            localStorage.setItem("current_page", i )
         })
 
         pagination.appendChild(paginationElement)
@@ -727,11 +820,11 @@ const loadPagination = (pages, url = "http://localhost:8080/transactions/paged?"
 }
 
 
-// pagination buttons functionality 
+// ARROW pagination buttons functionality 
 
 const paginationButtons = paginationContainer.querySelectorAll("button")
 
-const addFunctionalityToPaginationButtons = () => {
+const addFunctionalityToArrowPaginationButtons = () => {
     for(const button of paginationButtons){
         button.addEventListener("click", (e) => {
             const pages = pagination.children
@@ -745,20 +838,54 @@ const addFunctionalityToPaginationButtons = () => {
             
             if(pages[nextClick]){
                 pages[nextClick].click()
+                console.log(nextClick)
             }
 
         })
     }
 }
 
-addFunctionalityToPaginationButtons()
+addFunctionalityToArrowPaginationButtons()
+
+const loadCurrentPage = () => {
+
+    const currentPage = JSON.parse(localStorage.getItem("current_page"))
+    const pages = Array.from(pagination.children)
 
 
-// Loading when app starts
+    const currentSelectedPage = pagination.querySelector(".current_page")
+    currentSelectedPage.classList.remove("current_page")
+
+
+    
+
+    pages.filter(element => {
+        const pageNum = parseInt(element.innerText)
+
+        console.log(pageNum, currentPage + 1)
+        if(pageNum === currentPage + 1){
+            element.classList.add("current_page")
+        }
+    })
+
+//     console.log(pages)
+    // return `${paginationURL}page=${currentPage}`
+}
+
+
+// The first load of the application
+
+
 
 loadElements(categoryFilters, categoriesURL, filterOption)
-loadElements(transactions, paginationURL, transaction, addDeleteAndEditFunctionality)
+loadElements(
+  transactions,
+  paginationURL,
+  transaction,
+  addDeleteAndEditFunctionality
+)
 loadElements(simpleBarContainer, categoriesURL, categoryElement, addDeleteAndEditFunctionality)
+
 
 
 
@@ -812,7 +939,7 @@ const generateFilterQuery = (query, inputValues) => {
     return finalQuery
 }
 
-const handleFilters = async () => {
+const handleFilters = (onlyType) => {
   const inputValues = filters.reduce((accumulator, currentItem) => {
     const { value, id } = currentItem
 
@@ -827,6 +954,14 @@ const handleFilters = async () => {
     return accumulator
   }, {})
 
+  console.log(inputValues)
+
+  if(onlyType){
+    delete inputValues?.category
+  }
+
+
+
   const query = `http://localhost:8080/transactions/filter?`
 
   const finalQuery = generateFilterQuery(query, inputValues)
@@ -834,8 +969,11 @@ const handleFilters = async () => {
   const lengthOfQuery = Object.entries(inputValues).length
 
 
+
+
   if(lengthOfQuery > 0){
       loadTransactions(transactions, finalQuery, transaction, true)
+      localStorage.setItem("current_page", 0)
 
   } else {
     loadElements(
@@ -844,6 +982,8 @@ const handleFilters = async () => {
       transaction,
       addDeleteAndEditFunctionality
     )
+
+    loadElements(categoryFilters, categoriesURL, filterOption)
   }
 
 }
@@ -853,12 +993,19 @@ const handleFilters = async () => {
 filters.map(input => {
     input.addEventListener("change", (e) => {
         const {id, value} = e.target
-        handleFilters()
+        
+        
         
         if (id === "categoryType" && value.length > 0) {
             const url = `${categoriesURL}/filter?type=${value.toUpperCase()}` 
             
             loadElements(categoryFilters, url, filterOption)
+        }
+
+        if(id === "categoryType"){
+            handleFilters(true)
+        } else {
+            handleFilters()
         }
     
     })
@@ -967,10 +1114,11 @@ const checkIfContainsError = (e) => {
         }
     }
 
-    return false
+    // return falsepaginationURL
 }
 
 const postTransaction = (object, e) => {
+    const currentPage = localStorage.getItem("current_page")
     const select = e.currentTarget.querySelector("select")
     const idFromHtml = select.options[select.selectedIndex].id
 
@@ -983,7 +1131,12 @@ const postTransaction = (object, e) => {
     const jsonObject = JSON.stringify(newObj)
 
     sendToDataBase(transactionsURL, jsonObject, () => {
-        loadTransactions(transactions, paginationURL, transaction, true)
+        loadTransactions(
+          transactions,
+          getCurrentPageQuery(),
+          transaction,
+          true
+        )
         successMessage("Transaction has been added!", "green")
     })
 }
@@ -1068,10 +1221,6 @@ categoriesForm.addEventListener("submit", (e) => {
 
 
 
-
-// 3 
-
-// you need to make a functionality that allows you to edit categories
 
 
 // 4 

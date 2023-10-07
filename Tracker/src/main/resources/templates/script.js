@@ -452,18 +452,22 @@ const categoryElement = (args) => {
 const addHoverFunctionality = (element, icon) => {
    
     icon.classList.add("delete_element")
-    // icon.classList.add("hide")
+    icon.classList.add("hide")
 
     element.appendChild(icon)
 
     element.addEventListener("mouseover", (e) => {
-      icon.classList.remove("hide")
-      icon.classList.add("flex")
+        if(!icon.classList.contains("no_event")){
+            icon.classList.remove("hide")
+            icon.classList.add("flex")
+        }
     })
 
     element.addEventListener("mouseout", (e) => {
-      icon.classList.add("hide")
-      icon.classList.remove("flex")
+         if(!icon.classList.contains("no_event")){
+            icon.classList.add("hide")
+            icon.classList.remove("flex")
+        }
     })
 
 }
@@ -477,17 +481,33 @@ const getAllDeleteButtons = () => {
 
 let once = false
 
+
+// this resize needs thinking
+
+// might need to think about how to make in such way that it takes in consideration if it starts as a big screen and small screen
+
+// the effect needs to be the same
+
+// when small to show delete buttons and not allow the hover function to work
+
+// when big view port to not show buttons and allow hover effect
 window.addEventListener('resize', function() {
   const viewportWidth = window.innerWidth;
 
 
   if (viewportWidth <= 900) {
     if(!once){
-        getAllDeleteButtons()
+        getAllDeleteButtons().forEach(element => {
+            element.classList.add("no_event")
+        })
         once = true
     }
 
   } else {
+    getAllDeleteButtons().forEach(element => {
+        element.classList.remove("no_event")
+        element.classList.add("hide")
+    })
     once = false
  
   }

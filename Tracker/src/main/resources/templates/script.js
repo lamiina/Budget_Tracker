@@ -452,7 +452,7 @@ const categoryElement = (args) => {
 const addHoverFunctionality = (element, icon) => {
    
     icon.classList.add("delete_element")
-    icon.classList.add("hide")
+    // icon.classList.add("hide")
 
     element.appendChild(icon)
 
@@ -466,10 +466,33 @@ const addHoverFunctionality = (element, icon) => {
       icon.classList.remove("flex")
     })
 
-    
 }
 
+const getAllDeleteButtons = () => {
+    const deleteButtons = document.body.querySelectorAll(".transactions .delete_element")
 
+    console.log(deleteButtons)
+    return deleteButtons
+}
+
+let once = false
+
+window.addEventListener('resize', function() {
+  const viewportWidth = window.innerWidth;
+
+
+  if (viewportWidth <= 900) {
+    if(!once){
+        getAllDeleteButtons()
+        once = true
+    }
+
+  } else {
+    once = false
+ 
+  }
+
+})
 // when clicked out the edit mode needs to deactivate and go back to initial form
 
 // This means that you might have to break your editFunctionality in more functions so you can use them in an event listener for the body or document
@@ -1225,6 +1248,5 @@ categoriesForm.addEventListener("submit", (e) => {
 
 // 4 
 
-// when item is deleted pagination should load the page you are in
 // you can make it in such a way that only at aa certain viewport you can actually hover
 // if you add things to fast you can break the message animation

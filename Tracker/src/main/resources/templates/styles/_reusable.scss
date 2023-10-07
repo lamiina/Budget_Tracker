@@ -130,7 +130,7 @@ $s_spacing: 1rem;
 
 
 @mixin deleteButton {
-
+    display: flex;
     position: absolute;
     align-items: center;
     padding: 0;

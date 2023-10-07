@@ -530,6 +530,7 @@
         .categories_popup{
             .popup_container{
                 max-width: 700px;
+
             }
         }
     }
@@ -567,5 +568,17 @@
             display: none;
         
         }
+        
+        .transactions{
+    
+            .transactions_container{
+                li{
+                    .delete_element{
+                        display: none;
+                    }
+                }
+            }
+        }
     }
+
 }

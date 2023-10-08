@@ -1,4 +1,4 @@
-localStorage.setItem("current_page", false)
+localStorage.setItem("current_page", "")
 /*
         http://localhost:8080/transactions - get all, post, put, delete transactions
         http://localhost:8080/transactions/paged?page={number} - paged get transactions
@@ -334,10 +334,13 @@ const deleteSelectedItems = async () => {
 
   const jsonItemsToDelete = JSON.stringify(itemsToDelete)
 
+ 
+
   multipleDeletionFromDataBase(multiDeleteUrl, jsonItemsToDelete, () => {
     loadTransactions(transactions, getCurrentPageQuery(), transaction, true)
     successMessage("Items have been deleted!", "yellow")
     selectionForDeletionContainer.classList.remove("flex")
+    selectAllCurrentTransactions.checked = false
   })
 }
 
@@ -452,22 +455,29 @@ const categoryElement = (args) => {
 const addHoverFunctionality = (element, icon) => {
    
     icon.classList.add("delete_element")
-    icon.classList.add("hide")
+    
 
     element.appendChild(icon)
 
     element.addEventListener("mouseover", (e) => {
-        if(!icon.classList.contains("no_event")){
-            icon.classList.remove("hide")
-            icon.classList.add("flex")
+         const viewportWidth = window.innerWidth
+        
+         console.log(viewportWidth)
+
+        if (viewportWidth >= 900) {
+          icon.classList.remove("hide")
+          icon.classList.add("flex")
         }
     })
 
     element.addEventListener("mouseout", (e) => {
-         if(!icon.classList.contains("no_event")){
-            icon.classList.add("hide")
-            icon.classList.remove("flex")
-        }
+        const viewportWidth = window.innerWidth
+       
+
+         if (viewportWidth >= 900) {
+           icon.classList.add("hide")
+           icon.classList.remove("flex")
+         }
     })
 
 }
@@ -479,18 +489,9 @@ const getAllDeleteButtons = () => {
     return deleteButtons
 }
 
+
 let once = false
 
-
-// this resize needs thinking
-
-// might need to think about how to make in such way that it takes in consideration if it starts as a big screen and small screen
-
-// the effect needs to be the same
-
-// when small to show delete buttons and not allow the hover function to work
-
-// when big view port to not show buttons and allow hover effect
 window.addEventListener('resize', function() {
   const viewportWidth = window.innerWidth;
 
@@ -498,14 +499,13 @@ window.addEventListener('resize', function() {
   if (viewportWidth <= 900) {
     if(!once){
         getAllDeleteButtons().forEach(element => {
-            element.classList.add("no_event")
+            element.classList.remove("hide")
         })
         once = true
     }
 
   } else {
     getAllDeleteButtons().forEach(element => {
-        element.classList.remove("no_event")
         element.classList.add("hide")
     })
     once = false
@@ -513,11 +513,8 @@ window.addEventListener('resize', function() {
   }
 
 })
-// when clicked out the edit mode needs to deactivate and go back to initial form
 
-// This means that you might have to break your editFunctionality in more functions so you can use them in an event listener for the body or document
 
-// issue, when popup is closed the edit active items are going to break
 
 const editFunctionality = (element, icon) => {
     const id = element.id
@@ -602,7 +599,22 @@ const editFunctionality = (element, icon) => {
 }
 
 const getCurrentPageQuery = () => {
-     const currentPage = localStorage.getItem("current_page")
+     const transactionElements = Array.from(transactions.children)
+     const checkedItems = highlightSelectedTransactions()
+
+     const currentPage = parseInt(localStorage.getItem("current_page"))
+
+     console.log(transactionElements.length , checkedItems)
+
+     if (transactionElements.length === checkedItems.length
+        || transactionElements.length === 1) {
+            console.log(`${paginationURL}${currentPage ? `page=${currentPage - 1}` : ""}`)
+
+            localStorage.setItem("current_page", currentPage - 1)
+        return `${paginationURL}${currentPage ? `page=${currentPage - 1}` : ""}`
+     }
+
+
 
      return `${paginationURL}${currentPage ? `page=${currentPage}` : ""}`
 }
@@ -891,25 +903,29 @@ const addFunctionalityToArrowPaginationButtons = () => {
 addFunctionalityToArrowPaginationButtons()
 
 const loadCurrentPage = () => {
-
-    const currentPage = JSON.parse(localStorage.getItem("current_page"))
-    const pages = Array.from(pagination.children)
-
-
-    const currentSelectedPage = pagination.querySelector(".current_page")
-    currentSelectedPage.classList.remove("current_page")
-
-
     
+    const page = localStorage.getItem("current_page")
 
-    pages.filter(element => {
+    if(page !== ""){
+        const currentPage = JSON.parse(page)
+        const pages = Array.from(pagination.children)
+
+      
+
+        const currentSelectedPage = pagination.querySelector(".current_page")
+        currentSelectedPage.classList.remove("current_page")
+
+        pages.filter((element) => {
         const pageNum = parseInt(element.innerText)
 
-        console.log(pageNum, currentPage + 1)
-        if(pageNum === currentPage + 1){
-            element.classList.add("current_page")
-        }
-    })
+        
+            if (pageNum === currentPage + 1) {
+                element.classList.add("current_page")
+            }
+        })
+
+    }
+  
 
 //     console.log(pages)
     // return `${paginationURL}page=${currentPage}`
@@ -938,8 +954,11 @@ loadElements(simpleBarContainer, categoriesURL, categoryElement, addDeleteAndEdi
 
 // Function for displaying submission success for category or transaction
  const successMessageContainer = document.getElementById("success_message")
+ let messageTimeout
 
 const successMessage = (message, color) => {
+    clearTimeout(messageTimeout)
+
     successMessageContainer.innerHTML = `<p>${message}</p>`
     successMessageContainer.classList.remove("hide")
 
@@ -952,16 +971,17 @@ const successMessage = (message, color) => {
     successMessageContainer.style.animationName = "popIN"
     successMessageContainer.style.border = colors[color]
 
-    setTimeout(() => {
-       
-        successMessageContainer.style.animationName = "popOUT"
+    messageTimeout = setTimeout(() => {
+      successMessageContainer.style.animationName = "popOUT"
 
-        successMessageContainer.addEventListener("animationend", () => {
-        successMessageContainer.classList.add("hide")
-        successMessageContainer.style.animationName = "" 
-
-       },{ once: true }
-     )
+      successMessageContainer.addEventListener(
+        "animationend",
+        () => {
+          successMessageContainer.classList.add("hide")
+          successMessageContainer.style.animationName = ""
+        },
+        { once: true }
+      )
     }, 3000)
 
 }
@@ -1264,9 +1284,3 @@ categoriesForm.addEventListener("submit", (e) => {
 
 
 
-
-
-// 4 
-
-// you can make it in such a way that only at aa certain viewport you can actually hover
-// if you add things to fast you can break the message animation

@@ -716,4 +716,7 @@ header ul li a {
   .container .transactions .transactions_container li .delete_element {
     display: none;
   }
+  .container .transactions .transactions_container li .flex {
+    display: flex;
+  }
 }/*# sourceMappingURL=styles.css.map */
